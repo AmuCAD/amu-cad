@@ -1,5 +1,3 @@
-function EditPage() {
-  return <>EditPage</>;
-}
+function EditPage() {}
 
 export default EditPage;
