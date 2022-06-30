@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import Button from "../../components/shared/Button";
+import Button from "../../components/common/shared/Button";
 
 function HomePage() {
   return (

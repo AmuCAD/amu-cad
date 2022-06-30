@@ -24,9 +24,7 @@ const Header = styled.div`
 const Logo = styled.h1`
   margin-left: 20px;
   font-size: 30px;
-  color: #4A2882;
+  color: #4a2882;
 `;
-
-
 
 export default AppHeader;
