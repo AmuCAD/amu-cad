@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
 import ControlPanel from "../../components/common/ControlPanel";
-import VirtualPlane from "../../components/common/VirtualPlane";
+import OriginPlanes from "../../components/common/OriginPlanes";
 
 function EditPage() {
   return (
@@ -15,7 +15,7 @@ function EditPage() {
         }}
       >
         <OrbitControls />
-        <VirtualPlane />
+        <OriginPlanes />
         <ambientLight intensity={1} />
       </Canvas>
     </>
