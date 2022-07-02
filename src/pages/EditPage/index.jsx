@@ -6,7 +6,11 @@ import OriginPlanes from "../../components/common/OriginPlanes";
 import Model from "../../components/common/Model";
 import CameraDolly from "../../components/common/CameraDolly";
 
+import useStore from "../../store";
+
 function EditPage() {
+  const baseCoordinate = useStore(state => state.baseCoordinate);
+
   return (
     <>
       <ControlPanel />
@@ -19,7 +23,7 @@ function EditPage() {
         <OrbitControls />
         <OriginPlanes />
         {/* <Model /> */}
-        <CameraDolly />
+        {baseCoordinate && <CameraDolly baseCoordinate={baseCoordinate} />}
         <ambientLight intensity={1} />
       </Canvas>
     </>
