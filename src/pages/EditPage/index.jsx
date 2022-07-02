@@ -21,8 +21,8 @@ function EditPage() {
         }}
       >
         <OrbitControls />
-        <OriginPlanes />
-        {/* <Model /> */}
+        {/* <OriginPlanes /> */}
+        <Model />
         {baseCoordinate && <CameraDolly baseCoordinate={baseCoordinate} />}
         <ambientLight intensity={1} />
       </Canvas>

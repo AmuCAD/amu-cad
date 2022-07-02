@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import useStore from "../../../store";
+import Lines from "../../sketch-control/Lines";
 
 function Model() {
   const isSketchButtonActive = useStore(state => state.isSketchButtonActive);
@@ -18,7 +19,7 @@ function Model() {
         <meshStandardMaterial
           key={i}
           attach={`material-${i}`}
-          color={i === faceIndex ? "black" : "white"}
+          color={i === faceIndex ? "black" : "grey"}
         />,
       );
     }
@@ -38,31 +39,36 @@ function Model() {
   };
 
   return (
-    <mesh
-      position={[0, 0, 0]}
-      onPointerMove={e => {
-        if (isSketchButtonActive) {
+    <>
+      <mesh
+        position={[0, 0, 0]}
+        onPointerMove={e => {
           e.stopPropagation();
-          setFaceCount(e.eventObject.geometry.groups.length);
-          setFaceIndex(e.face.materialIndex);
-          setSameCoordinate(
-            findSameCoordinate(prevPoint, e.point, sameCoordinate),
-          );
-          setPrevPoint(e.point);
-        }
-      }}
-      onPointerOut={e => {
-        e.stopPropagation();
-        setFaceIndex(null);
-      }}
-      onClick={e => {
-        e.stopPropagation();
-        setBaseCoordinate(sameCoordinate);
-      }}
-    >
-      <boxBufferGeometry attach="geometry" args={[10, 10, 10]} />
-      {generateMaterials(faceCount, faceIndex)}
-    </mesh>
+
+          if (isSketchButtonActive) {
+            setFaceCount(e.eventObject.geometry.groups.length);
+            setFaceIndex(e.face.materialIndex);
+            setSameCoordinate(
+              findSameCoordinate(prevPoint, e.point, sameCoordinate),
+            );
+            setPrevPoint(e.point);
+          }
+        }}
+        onPointerOut={e => {
+          e.stopPropagation();
+          setFaceIndex(null);
+        }}
+        onClick={() => {
+          if (isSketchButtonActive) {
+            setBaseCoordinate(sameCoordinate);
+          }
+        }}
+      >
+        <boxBufferGeometry attach="geometry" args={[10, 10, 10]} />
+        {generateMaterials(faceCount, faceIndex)}
+      </mesh>
+      <Lines />
+    </>
   );
 }
 

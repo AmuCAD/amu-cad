@@ -13,14 +13,15 @@ const CameraDolly = ({ baseCoordinate }) => {
   const getCameraPosition = baseCoordinate => {
     const key = Object.keys(baseCoordinate)[0];
     const value = baseCoordinate[Object.keys(baseCoordinate)[0]];
+    const distance = value < 0 ? value - 10 : value + 10;
 
     switch (key) {
       case "x":
-        return [value + 10, 0, 0];
+        return [distance, 0, 0];
       case "y":
-        return [0, value + 10, 0];
+        return [0, distance, 0];
       default:
-        return [0, 0, value + 10];
+        return [0, 0, distance];
     }
   };
 
