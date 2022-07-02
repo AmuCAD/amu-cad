@@ -5,13 +5,6 @@ function SketchStartButton() {
     state.isSketchButtonActive,
     state.setIsSketchButtonActive,
   ]);
-  const setIsSketchMode = useStore(state => state.setIsSketchMode);
-  const baseCoordinate = useStore(state => state.baseCoordinate);
-
-  if (baseCoordinate) {
-    setIsSketchButtonActive();
-    setIsSketchMode();
-  }
 
   return (
     <button

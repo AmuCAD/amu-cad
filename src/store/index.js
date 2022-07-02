@@ -6,12 +6,9 @@ const useStore = create(
     isSketchButtonActive: false,
     setIsSketchButtonActive: () =>
       set(state => ({ isSketchButtonActive: !state.isSketchButtonActive })),
-    isSketchMode: false,
-    setIsSketchMode: () =>
-      set(state => ({ isSketchMode: !state.isSketchMode })),
     baseCoordinate: null,
-    setBaseCoordinate: (coordinate) =>
-      set(() => ({ baseCoordinate: coordinate })),
+    setBaseCoordinate: coordinate =>
+      set(() => ({ baseCoordinate: coordinate, isSketchButtonActive: false })),
   })),
 );
 
