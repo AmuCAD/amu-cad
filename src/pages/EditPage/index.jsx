@@ -4,6 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 import ControlPanel from "../../components/common/ControlPanel";
 import OriginPlanes from "../../components/common/OriginPlanes";
 import Model from "../../components/common/Model";
+import CameraDolly from "../../components/common/CameraDolly";
 
 function EditPage() {
   return (
@@ -18,6 +19,7 @@ function EditPage() {
         <OrbitControls />
         <OriginPlanes />
         {/* <Model /> */}
+        <CameraDolly />
         <ambientLight intensity={1} />
       </Canvas>
     </>
