@@ -9,6 +9,9 @@ const useStore = create(
     baseCoordinate: null,
     setBaseCoordinate: coordinate =>
       set(() => ({ baseCoordinate: coordinate, isSketchButtonActive: false })),
+    activeFunction: null,
+    setActiveFunction: functionName =>
+      set(() => ({ activeFunction: functionName })),
   })),
 );
 
