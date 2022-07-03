@@ -9,6 +9,9 @@ const useStore = create(
     activeFunction: null,
     setActiveFunction: functionName =>
       set(() => ({ activeFunction: functionName })),
+    activeModal: {},
+    setActiveModal: ({ type, props }) =>
+      set(() => ({ activeModal: { type, props } })),
   })),
 );
 

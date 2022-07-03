@@ -7,9 +7,13 @@ import Model from "../../components/common/Model";
 import CameraDolly from "../../components/common/CameraDolly";
 
 import useStore from "../../store";
+import useModal from "../../hooks/useModal";
 
 function EditPage() {
   const baseCoordinate = useStore(state => state.baseCoordinate);
+
+  const { showModal } = useModal();
+  showModal({ type: "test" });
 
   return (
     <>
