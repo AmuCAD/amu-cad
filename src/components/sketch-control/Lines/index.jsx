@@ -12,53 +12,93 @@ function Lines() {
   ]);
   const [mouse, setMouse] = useState({});
   const [linePoints, setLinePoints] = useState([]);
+  const [lines, setLines] = useState([]);
 
-  const getBasePosition = baseCoordinate => {
-    const key = Object.keys(baseCoordinate)[0];
+  const key = baseCoordinate && Object.keys(baseCoordinate)[0];
+
+  const getBasePosition = key => {
     const value = baseCoordinate[Object.keys(baseCoordinate)[0]];
     const result = {};
 
     switch (key) {
       case "x":
         result.position = [value, 0, 0];
-        result.rotation = [0, Math.PI / 2, 0];
-        break;
+        result.rotation = [0, -Math.PI / 2, 0];
+
+        return result;
       case "y":
         result.position = [0, value, 0];
-        result.rotation = [-Math.PI / 2, 0, 0];
-        break;
+        result.rotation = [Math.PI / 2, 0, 0];
+
+        return result;
       default:
         result.position = [0, 0, value];
-        result.rotation = [0, 0, -Math.PI / 2];
-        break;
-    }
+        result.rotation = [0, 0, 0];
 
-    return result;
+        return result;
+    }
   };
 
-  function coordsToShape(coords) {
+  const coordsToShape = (coords, key) => {
     const shape = new THREE.Shape();
     const [x, y, z] = coords[0];
 
-    shape.moveTo(x, y);
+    switch (key) {
+      case "x":
+        shape.moveTo(z, y);
 
-    for (const [x, y] of coords) {
-      shape.lineTo(x, y);
+        for (const [x, y, z] of coords) {
+          shape.lineTo(z, y);
+        }
+
+        return shape;
+
+      case "y":
+        shape.moveTo(x, z);
+
+        for (const [x, y, z] of coords) {
+          shape.lineTo(x, z);
+        }
+
+        return shape;
+
+      default:
+        shape.moveTo(x, y);
+
+        for (const [x, y, z] of coords) {
+          shape.lineTo(x, y);
+        }
+
+        return shape;
     }
-
-    return shape;
-  }
+  };
 
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       setMouse({});
       setActiveFunction(null);
+      setLines([
+        ...lines,
+        <>
+          <Line points={[...linePoints, Object.values(mouse)]} color="black" />
+          <mesh position={position} rotation={rotation}>
+            <shapeBufferGeometry
+              attach="geometry"
+              args={[coordsToShape(linePoints, key)]}
+            />
+            <meshBasicMaterial
+              attach="material"
+              color="red"
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </>,
+      ]);
+      setLinePoints([]);
     }
   });
 
-  const { position, rotation } = baseCoordinate
-    ? getBasePosition(baseCoordinate)
-    : {};
+  const { position, rotation } = baseCoordinate ? getBasePosition(key) : {};
 
   return (
     <>
@@ -84,21 +124,22 @@ function Lines() {
           side={THREE.DoubleSide}
         />
       </Plane>
+      {lines}
       {linePoints[0] && (
-        <Line points={[...linePoints, Object.values(mouse)]} color="black" />
-      )}
-      {linePoints[0] && (
-        <mesh position={position}>
-          <shapeBufferGeometry
-            attach="geometry"
-            args={[coordsToShape(linePoints)]}
-          />
-          <meshBasicMaterial
-            attach="material"
-            color="red"
-            side={THREE.DoubleSide}
-          />
-        </mesh>
+        <>
+          <Line points={[...linePoints, Object.values(mouse)]} color="black" />
+          <mesh position={position} rotation={rotation}>
+            <shapeBufferGeometry
+              attach="geometry"
+              args={[coordsToShape(linePoints, key)]}
+            />
+            <meshBasicMaterial
+              attach="material"
+              color="red"
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </>
       )}
     </>
   );
