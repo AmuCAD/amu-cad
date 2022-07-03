@@ -1,6 +1,5 @@
 import UndoButton from "../UndoButton";
 import RedoButton from "../RedoButton";
-import SketchExitButton from "../../sketch-control/SketchExitButton";
 import useStore from "../../../store";
 
 function SketchController() {
@@ -8,6 +7,7 @@ function SketchController() {
     state.activeFunction,
     state.setActiveFunction,
   ]);
+  const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
 
   return (
     <>
@@ -58,7 +58,14 @@ function SketchController() {
       </button>
       <UndoButton />
       <RedoButton />
-      <SketchExitButton />
+      <button
+        onClick={() => {
+          setActiveFunction(null)
+          setBaseCoordinate(null);
+        }}
+      >
+        스케치 종료
+      </button>
     </>
   );
 }

@@ -5,7 +5,7 @@ import * as THREE from "three";
 import useStore from "../../../store";
 
 function VirtualPlane(props) {
-  const isSketchButtonActive = useStore(state => state.isSketchButtonActive);
+  const activeFunction = useStore(state => state.activeFunction);
   const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
   const [isHover, setHover] = useState(false);
 
@@ -14,7 +14,7 @@ function VirtualPlane(props) {
       args={[10, 10]}
       rotation={props.rotation}
       onPointerMove={e => {
-        if (isSketchButtonActive) {
+        if (activeFunction === "SKETCH") {
           e.stopPropagation();
           setHover(true);
         }
@@ -24,7 +24,7 @@ function VirtualPlane(props) {
         setHover(false);
       }}
       onClick={e => {
-        if (isSketchButtonActive) {
+        if (activeFunction === "SKETCH") {
           e.stopPropagation();
 
           switch (props.text) {
