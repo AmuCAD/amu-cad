@@ -1,5 +1,5 @@
-import { Line, Plane } from "@react-three/drei";
 import { useState } from "react";
+import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
 
 import useStore from "../../../store";
@@ -12,13 +12,6 @@ function Lines() {
   ]);
   const [mouse, setMouse] = useState({});
   const [linePoints, setLinePoints] = useState([]);
-
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      setMouse({});
-      setActiveFunction(null);
-    }
-  });
 
   const getBasePosition = baseCoordinate => {
     const key = Object.keys(baseCoordinate)[0];
@@ -42,6 +35,26 @@ function Lines() {
 
     return result;
   };
+
+  function coordsToShape(coords) {
+    const shape = new THREE.Shape();
+    const [x, y, z] = coords[0];
+
+    shape.moveTo(x, y);
+
+    for (const [x, y] of coords) {
+      shape.lineTo(x, y);
+    }
+
+    return shape;
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      setMouse({});
+      setActiveFunction(null);
+    }
+  });
 
   const { position, rotation } = baseCoordinate
     ? getBasePosition(baseCoordinate)
@@ -71,8 +84,21 @@ function Lines() {
           side={THREE.DoubleSide}
         />
       </Plane>
-      {linePoints.length > 0 && (
+      {linePoints[0] && (
         <Line points={[...linePoints, Object.values(mouse)]} color="black" />
+      )}
+      {linePoints[0] && (
+        <mesh position={position}>
+          <shapeBufferGeometry
+            attach="geometry"
+            args={[coordsToShape(linePoints)]}
+          />
+          <meshBasicMaterial
+            attach="material"
+            color="red"
+            side={THREE.DoubleSide}
+          />
+        </mesh>
       )}
     </>
   );

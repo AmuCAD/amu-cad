@@ -4,7 +4,7 @@ import useStore from "../../../store";
 import Lines from "../../sketch-control/Lines";
 
 function Model() {
-  const isSketchButtonActive = useStore(state => state.isSketchButtonActive);
+  const activeFunction = useStore(state => state.activeFunction);
   const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
   const [faceCount, setFaceCount] = useState(0);
   const [faceIndex, setFaceIndex] = useState(null);
@@ -45,7 +45,7 @@ function Model() {
         onPointerMove={e => {
           e.stopPropagation();
 
-          if (isSketchButtonActive) {
+          if (activeFunction === "SKETCH") {
             setFaceCount(e.eventObject.geometry.groups.length);
             setFaceIndex(e.face.materialIndex);
             setSameCoordinate(
@@ -59,7 +59,7 @@ function Model() {
           setFaceIndex(null);
         }}
         onClick={() => {
-          if (isSketchButtonActive) {
+          if (activeFunction === "SKETCH") {
             setBaseCoordinate(sameCoordinate);
           }
         }}
