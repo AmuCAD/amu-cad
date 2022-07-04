@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
+import useModal from "../../../hooks/useModal";
 
 function LineShape() {
   const baseCoordinate = useStore(state => state.baseCoordinate);
@@ -15,6 +16,7 @@ function LineShape() {
   const [mouse, setMouse] = useState({});
   const [linePoints, setLinePoints] = useState([]);
   const [lines, setLines] = useState([]);
+  const { showModal } = useModal();
 
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
   const { position, rotation } = baseCoordinate
@@ -68,6 +70,7 @@ function LineShape() {
             rotation={rotation}
             onClick={() => {
               setExtrudeShape(coordsToShape(linePoints, key));
+              showModal({ type: "EXTRUDE" });
             }}
           >
             <shapeBufferGeometry

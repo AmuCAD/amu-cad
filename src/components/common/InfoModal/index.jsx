@@ -24,8 +24,7 @@ const ModalContainer = styled.div`
   width: 400px;
   height: 130px;
   border-radius: 15px;
-  opacity: 0.5;
-  background-color: #ffff;
+  background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 0px 3px;
   z-index: 1000;
 `;

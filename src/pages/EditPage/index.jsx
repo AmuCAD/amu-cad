@@ -12,9 +12,9 @@ import Sketch from "../../components/common/Sketch";
 function EditPage() {
   const isSketchMode = useStore(state => state.isSketchMode);
   const baseCoordinate = useStore(state => state.baseCoordinate);
-
   const { showModal } = useModal();
-  showModal({ type: "test" });
+
+  // showModal({ type: "test" });
 
   return (
     <>
