@@ -1,11 +1,14 @@
 import { useState } from "react";
 
 import useStore from "../../../store";
-import Lines from "../../sketch-control/Lines";
+import Extrude from "../../model-control/Extrude";
 
 function Model() {
-  const activeFunction = useStore(state => state.activeFunction);
-  const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
+  const isSketchMode = useStore(state => state.isSketchMode);
+  const [baseCoordinate, setBaseCoordinate] = useStore(state => [
+    state.baseCoordinate,
+    state.setBaseCoordinate,
+  ]);
   const [faceCount, setFaceCount] = useState(0);
   const [faceIndex, setFaceIndex] = useState(null);
   const [prevPoint, setPrevPoint] = useState(null);
@@ -19,7 +22,11 @@ function Model() {
         <meshStandardMaterial
           key={i}
           attach={`material-${i}`}
-          color={i === faceIndex ? "black" : "grey"}
+          color={
+            i === faceIndex && isSketchMode && !baseCoordinate
+              ? "black"
+              : "white"
+          }
         />,
       );
     }
@@ -44,30 +51,25 @@ function Model() {
         position={[0, 0, 0]}
         onPointerMove={e => {
           e.stopPropagation();
-
-          if (activeFunction === "SKETCH") {
-            setFaceCount(e.eventObject.geometry.groups.length);
-            setFaceIndex(e.face.materialIndex);
-            setSameCoordinate(
-              findSameCoordinate(prevPoint, e.point, sameCoordinate),
-            );
-            setPrevPoint(e.point);
-          }
+          setFaceCount(e.eventObject.geometry.groups.length);
+          setFaceIndex(e.face.materialIndex);
+          setSameCoordinate(
+            findSameCoordinate(prevPoint, e.point, sameCoordinate),
+          );
+          setPrevPoint(e.point);
         }}
         onPointerOut={e => {
           e.stopPropagation();
           setFaceIndex(null);
         }}
         onClick={() => {
-          if (activeFunction === "SKETCH") {
-            setBaseCoordinate(sameCoordinate);
-          }
+          setBaseCoordinate(sameCoordinate);
         }}
       >
         <boxBufferGeometry attach="geometry" args={[10, 10, 10]} />
         {generateMaterials(faceCount, faceIndex)}
       </mesh>
-      <Lines />
+      <Extrude />
     </>
   );
 }

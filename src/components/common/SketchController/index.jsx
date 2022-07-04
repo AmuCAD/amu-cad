@@ -3,6 +3,7 @@ import RedoButton from "../RedoButton";
 import useStore from "../../../store";
 
 function SketchController() {
+  const setIsSketchMode = useStore(state => state.setIsSketchMode);
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
     state.setActiveFunction,
@@ -60,7 +61,8 @@ function SketchController() {
       <RedoButton />
       <button
         onClick={() => {
-          setActiveFunction(null)
+          setIsSketchMode(false);
+          setActiveFunction(null);
           setBaseCoordinate(null);
         }}
       >

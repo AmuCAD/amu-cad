@@ -5,11 +5,16 @@ import SketchController from "../SketchController";
 import useStore from "../../../store";
 
 function ControlPanel() {
+  const isSketchMode = useStore(state => state.isSketchMode);
   const baseCoordinate = useStore(state => state.baseCoordinate);
 
   return (
     <Container>
-      {baseCoordinate ? <SketchController /> : <ModelController />}
+      {isSketchMode && baseCoordinate ? (
+        <SketchController />
+      ) : (
+        <ModelController />
+      )}
     </Container>
   );
 }

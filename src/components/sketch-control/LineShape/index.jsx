@@ -3,41 +3,23 @@ import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
 
 import useStore from "../../../store";
+import getBasePosition from "../../../utils/getBasePosition";
 
-function Lines() {
+function LineShape() {
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
     state.setActiveFunction,
   ]);
+  const setExtrudeShape = useStore(state => state.setExtrudeShape);
   const [mouse, setMouse] = useState({});
   const [linePoints, setLinePoints] = useState([]);
   const [lines, setLines] = useState([]);
 
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
-  const value = baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
-
-  const getBasePosition = value => {
-    const result = {};
-
-    switch (key) {
-      case "x":
-        result.position = [value, 0, 0];
-        result.rotation = [0, -Math.PI / 2, 0];
-
-        return result;
-      case "y":
-        result.position = [0, value, 0];
-        result.rotation = [Math.PI / 2, 0, 0];
-
-        return result;
-      default:
-        result.position = [0, 0, value];
-        result.rotation = [0, 0, 0];
-
-        return result;
-    }
-  };
+  const { position, rotation } = baseCoordinate
+    ? getBasePosition(baseCoordinate)
+    : {};
 
   const coordsToShape = (coords, key) => {
     const shape = new THREE.Shape();
@@ -74,27 +56,23 @@ function Lines() {
   };
 
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
+    if (activeFunction === "LINE" && e.key === "Escape") {
       setMouse({});
       setActiveFunction(null);
       setLines([
         ...lines,
         <>
           <Line points={[...linePoints, Object.values(mouse)]} color="black" />
-          <mesh position={position} rotation={rotation}>
+          <mesh
+            position={position}
+            rotation={rotation}
+            onClick={() => {
+              setExtrudeShape(coordsToShape(linePoints, key));
+            }}
+          >
             <shapeBufferGeometry
               attach="geometry"
               args={[coordsToShape(linePoints, key)]}
-            />
-            <meshBasicMaterial
-              attach="material"
-              color="red"
-              side={THREE.DoubleSide}
-            />
-          </mesh>
-          <mesh position={position} rotation={rotation}>
-            <extrudeGeometry
-              args={[coordsToShape(linePoints, key), extrudeSettings]}
             />
             <meshBasicMaterial
               attach="material"
@@ -107,13 +85,6 @@ function Lines() {
       setLinePoints([]);
     }
   });
-
-  const { position, rotation } = baseCoordinate ? getBasePosition(value) : {};
-
-  const extrudeSettings = {
-    depth: 10 * ((key === "z" && value < 0) || ((key === "x" || key === "y") && value >= 0) ? -1 : 1),
-    bevelEnabled: false,
-  };
 
   return (
     <>
@@ -154,21 +125,10 @@ function Lines() {
               side={THREE.DoubleSide}
             />
           </mesh>
-          <mesh position={position} rotation={rotation}>
-            <extrudeGeometry
-              attach="geometry"
-              args={[coordsToShape(linePoints, key), extrudeSettings]}
-            />
-            <meshBasicMaterial
-              attach="material"
-              color="red"
-              side={THREE.DoubleSide}
-            />
-          </mesh>
         </>
       )}
     </>
   );
 }
 
-export default Lines;
+export default LineShape;

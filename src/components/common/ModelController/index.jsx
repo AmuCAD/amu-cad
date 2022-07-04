@@ -6,27 +6,37 @@ import StlExportButton from "../../model-control/StlExportButton";
 import useStore from "../../../store";
 
 function ModelController() {
+  const [isSketchMode, setIsSketchMode] = useStore(state => [
+    state.isSketchMode,
+    state.setIsSketchMode,
+  ]);
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
     state.setActiveFunction,
   ]);
+  const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
+  const setExtrudeShape = useStore(state => state.setExtrudeShape);
 
   return (
     <>
       <button
         onClick={() => {
-          activeFunction === "SKETCH"
-            ? setActiveFunction(null)
-            : setActiveFunction("SKETCH");
+          isSketchMode ? setIsSketchMode(false) : setIsSketchMode(true);
+
+          setActiveFunction(null);
+          setBaseCoordinate(null);
         }}
       >
-        {activeFunction === "SKETCH" ? "스케치 시작(활)" : "스케치 시작"}
+        {isSketchMode ? "스케치 시작(활)" : "스케치 시작"}
       </button>
       <button
         onClick={() => {
           activeFunction === "EXTRUDE"
             ? setActiveFunction(null)
             : setActiveFunction("EXTRUDE");
+
+          setExtrudeShape(null);
+          setIsSketchMode(false);
         }}
       >
         {activeFunction === "EXTRUDE" ? "돌출(활)" : "돌출"}
@@ -36,6 +46,8 @@ function ModelController() {
           activeFunction === "REVOLVE"
             ? setActiveFunction(null)
             : setActiveFunction("REVOLVE");
+
+          setIsSketchMode(false);
         }}
       >
         {activeFunction === "REVOLVE" ? "회전(활)" : "회전"}
