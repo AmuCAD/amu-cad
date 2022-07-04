@@ -2,26 +2,61 @@ import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
 
 import useModal from "../../../hooks/useModal";
+import useStore from "../../../store";
 
 function ExtrudeModal() {
+  const setExtrudeSize = useStore(state => state.setExtrudeSize);
+  const setIsConfirm = useStore(state => state.setIsConfirm);
+  const setExtrudeShape = useStore(state => state.setExtrudeShape);
+  const activeFunction = useStore(state => state.activeFunction);
   const { hideModal } = useModal();
 
+  const handleInputChange = e => {
+    setExtrudeSize(e.target.value);
+  };
+
+  const handleConfirmButtonClick = e => {
+    setIsConfirm(true);
+  };
+
   return (
-    <ModalOverlay onClick={hideModal}>
-      <ModalContainer
-        onClick={e => {
-          e.stopPropagation();
-        }}
-      >
-        <CloseButton onClick={hideModal} />
-        <div>
-          <SelectButton> 차집합 </SelectButton>
-          <SelectButton> 합집합 </SelectButton>
-        </div>
-        치수 <SizeInput type="number"></SizeInput>
-        <ConfirmButton onClick={hideModal}>확인</ConfirmButton>
-      </ModalContainer>
-    </ModalOverlay>
+    <>
+      {activeFunction === "EXTRUDE" && (
+        <ModalOverlay
+          onClick={() => {
+            setExtrudeShape(false);
+            hideModal();
+          }}
+        >
+          <ModalContainer
+            onClick={e => {
+              e.stopPropagation();
+            }}
+          >
+            <CloseButton
+              onClick={() => {
+                setExtrudeShape(false);
+                hideModal();
+              }}
+            />
+            <div>
+              <SelectButton> 차집합 </SelectButton>
+              <SelectButton> 합집합 </SelectButton>
+            </div>
+            치수{" "}
+            <SizeInput type="number" onChange={handleInputChange}></SizeInput>
+            <ConfirmButton
+              onClick={() => {
+                handleConfirmButtonClick();
+                hideModal();
+              }}
+            >
+              확인
+            </ConfirmButton>
+          </ModalContainer>
+        </ModalOverlay>
+      )}
+    </>
   );
 }
 

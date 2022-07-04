@@ -18,6 +18,12 @@ const useStore = create(
     extrudeShape: null,
     setExtrudeShape: shape =>
       set(() => ({ extrudeShape: shape })),
+    extrudeSize: 0,
+    setExtrudeSize: size =>
+      set(() => ({ extrudeSize: size })),
+    isConfirm: false,
+    setIsConfirm: boolean =>
+      set(() => ({ isConfirm: boolean })),
   })),
 );
 
