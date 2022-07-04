@@ -15,9 +15,9 @@ function Lines() {
   const [lines, setLines] = useState([]);
 
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
+  const value = baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
 
-  const getBasePosition = key => {
-    const value = baseCoordinate[Object.keys(baseCoordinate)[0]];
+  const getBasePosition = value => {
     const result = {};
 
     switch (key) {
@@ -92,13 +92,28 @@ function Lines() {
               side={THREE.DoubleSide}
             />
           </mesh>
+          <mesh position={position} rotation={rotation}>
+            <extrudeGeometry
+              args={[coordsToShape(linePoints, key), extrudeSettings]}
+            />
+            <meshBasicMaterial
+              attach="material"
+              color="red"
+              side={THREE.DoubleSide}
+            />
+          </mesh>
         </>,
       ]);
       setLinePoints([]);
     }
   });
 
-  const { position, rotation } = baseCoordinate ? getBasePosition(key) : {};
+  const { position, rotation } = baseCoordinate ? getBasePosition(value) : {};
+
+  const extrudeSettings = {
+    depth: 10 * ((key === "z" && value < 0) || ((key === "x" || key === "y") && value >= 0) ? -1 : 1),
+    bevelEnabled: false,
+  };
 
   return (
     <>
@@ -132,6 +147,17 @@ function Lines() {
             <shapeBufferGeometry
               attach="geometry"
               args={[coordsToShape(linePoints, key)]}
+            />
+            <meshBasicMaterial
+              attach="material"
+              color="red"
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+          <mesh position={position} rotation={rotation}>
+            <extrudeGeometry
+              attach="geometry"
+              args={[coordsToShape(linePoints, key), extrudeSettings]}
             />
             <meshBasicMaterial
               attach="material"
