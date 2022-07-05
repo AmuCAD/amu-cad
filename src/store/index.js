@@ -22,6 +22,8 @@ const useStore = create(
     setIsConfirm: boolean => set(() => ({ isConfirm: boolean })),
     operationType: "UNION",
     setOperationType: type => set(() => ({ operationType: type })),
+    blobUrl: null,
+    setBlobUrl: url => set(() => ({ blobUrl: url })),
   })),
 );
 

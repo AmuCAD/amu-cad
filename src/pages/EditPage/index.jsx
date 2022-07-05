@@ -8,6 +8,7 @@ import CameraDolly from "../../components/common/CameraDolly";
 import useStore from "../../store";
 import useModal from "../../hooks/useModal";
 import Sketch from "../../components/common/Sketch";
+import Exporter from "../../components/common/Exporter";
 
 function EditPage() {
   const isSketchMode = useStore(state => state.isSketchMode);
@@ -34,6 +35,7 @@ function EditPage() {
         )}
         <ambientLight intensity={1} />
         <pointLight position={[15, 20, 10]} intensity={2} color="#fff" />
+        <Exporter />
       </Canvas>
     </>
   );
