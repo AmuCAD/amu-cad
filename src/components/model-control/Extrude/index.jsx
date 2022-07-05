@@ -22,6 +22,7 @@ function Extrude() {
     state.setActiveFunction,
   ]);
   const [extrudeSettings, setExtrudeSettings] = useState({});
+  const operationType = useStore(state => state.operationType);
   const [model, setModel] = useState(null);
 
   const ref = useRef(null);
@@ -47,11 +48,20 @@ function Extrude() {
   useEffect(() => {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
+      const modelMesh = model?.clone();
 
-      if (model) {
+      if (model && operationType === "UNION") {
+        const result = CSG.union(modelMesh, extrudeMesh);
+
         scene.remove(model);
-        setModel(CSG.intersect(model, extrudeMesh));
-        scene.add(CSG.intersect(model, extrudeMesh));
+        setModel(result);
+        scene.add(result);
+      } else if (model && operationType === "SUBTRACT") {
+        const result = CSG.subtract(modelMesh, extrudeMesh);
+
+        scene.remove(model);
+        setModel(result);
+        scene.add(result);
       } else {
         setModel(extrudeMesh);
         scene.add(extrudeMesh);

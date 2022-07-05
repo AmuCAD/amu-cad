@@ -76,7 +76,6 @@ function LineShape() {
       setLines([
         ...lines,
         <>
-          <Line points={[...linePoints, Object.values(mouse)]} color="black" />
           <mesh
             position={position}
             rotation={rotation}

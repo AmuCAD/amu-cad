@@ -3,12 +3,21 @@ import { IoMdClose } from "react-icons/io";
 
 import useModal from "../../../hooks/useModal";
 import useStore from "../../../store";
+import { useEffect } from "react";
 
 function ExtrudeModal() {
   const setExtrudeSize = useStore(state => state.setExtrudeSize);
   const setIsConfirm = useStore(state => state.setIsConfirm);
-  const setExtrudeShape = useStore(state => state.setExtrudeShape);
+  const [extrudeShape, setExtrudeShape] = useStore(state => [
+    state.extrudeShape,
+    state.setExtrudeShape,
+  ]);
   const activeFunction = useStore(state => state.activeFunction);
+  const [operationType, setOperationType] = useStore(state => [
+    state.operationType,
+    state.setOperationType,
+  ]);
+
   const { hideModal } = useModal();
 
   const handleInputChange = e => {
@@ -21,10 +30,9 @@ function ExtrudeModal() {
 
   return (
     <>
-      {activeFunction === "EXTRUDE" && (
+      {activeFunction === "EXTRUDE" && extrudeShape && (
         <ModalOverlay
           onClick={() => {
-            setExtrudeShape(false);
             hideModal();
           }}
         >
@@ -35,15 +43,26 @@ function ExtrudeModal() {
           >
             <CloseButton
               onClick={() => {
-                setExtrudeShape(false);
                 hideModal();
               }}
             />
             <div>
-              <SelectButton> 차집합 </SelectButton>
-              <SelectButton> 합집합 </SelectButton>
+              <SelectButton
+                onClick={() => {
+                  setOperationType("SUBTRACT");
+                }}
+              >
+                {operationType === "SUBTRACT" ? "차집합(활)" : "차집합"}
+              </SelectButton>
+              <SelectButton
+                onClick={() => {
+                  setOperationType("UNION");
+                }}
+              >
+                {operationType === "UNION" ? "합집합(활)" : "합집합"}
+              </SelectButton>
             </div>
-            치수{" "}
+            치수
             <SizeInput type="number" onChange={handleInputChange}></SizeInput>
             <ConfirmButton
               onClick={() => {

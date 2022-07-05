@@ -7,8 +7,7 @@ const useStore = create(
     setBaseCoordinate: coordinate =>
       set(() => ({ baseCoordinate: coordinate })),
     isSketchMode: false,
-    setIsSketchMode: boolean =>
-      set(() => ({ isSketchMode: boolean })),
+    setIsSketchMode: boolean => set(() => ({ isSketchMode: boolean })),
     activeFunction: null,
     setActiveFunction: functionName =>
       set(() => ({ activeFunction: functionName })),
@@ -16,14 +15,13 @@ const useStore = create(
     setActiveModal: ({ type, props }) =>
       set(() => ({ activeModal: { type, props } })),
     extrudeShape: null,
-    setExtrudeShape: shape =>
-      set(() => ({ extrudeShape: shape })),
+    setExtrudeShape: shape => set(() => ({ extrudeShape: shape })),
     extrudeSize: 0,
-    setExtrudeSize: size =>
-      set(() => ({ extrudeSize: size })),
+    setExtrudeSize: size => set(() => ({ extrudeSize: size })),
     isConfirm: false,
-    setIsConfirm: boolean =>
-      set(() => ({ isConfirm: boolean })),
+    setIsConfirm: boolean => set(() => ({ isConfirm: boolean })),
+    operationType: "UNION",
+    setOperationType: type => set(() => ({ operationType: type })),
   })),
 );
 
