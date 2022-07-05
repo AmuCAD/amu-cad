@@ -5,8 +5,11 @@ import * as THREE from "three";
 import useStore from "../../../store";
 
 function VirtualPlane(props) {
-  const activeFunction = useStore(state => state.activeFunction);
-  const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
+  const isSketchMode = useStore(state => state.isSketchMode);
+  const [baseCoordinate, setBaseCoordinate] = useStore(state => [
+    state.baseCoordinate,
+    state.setBaseCoordinate,
+  ]);
   const [isHover, setHover] = useState(false);
 
   return (
@@ -14,7 +17,7 @@ function VirtualPlane(props) {
       args={[10, 10]}
       rotation={props.rotation}
       onPointerMove={e => {
-        if (activeFunction === "SKETCH") {
+        if (isSketchMode) {
           e.stopPropagation();
           setHover(true);
         }
@@ -24,7 +27,7 @@ function VirtualPlane(props) {
         setHover(false);
       }}
       onClick={e => {
-        if (activeFunction === "SKETCH") {
+        if (isSketchMode && !baseCoordinate) {
           e.stopPropagation();
 
           switch (props.text) {
@@ -56,7 +59,7 @@ function VirtualPlane(props) {
       />
       <meshStandardMaterial
         attach="material"
-        color={isHover ? "red" : "orange"}
+        color={isHover && isSketchMode && !baseCoordinate ? "red" : "orange"}
         opacity={0.5}
         side={THREE.DoubleSide}
         transparent

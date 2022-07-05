@@ -26,13 +26,14 @@ function EditPage() {
         }}
       >
         <OrbitControls />
-        {/* <OriginPlanes /> */}
+        <OriginPlanes />
         <Model />
         <Sketch />
         {isSketchMode && baseCoordinate && (
           <CameraDolly baseCoordinate={baseCoordinate} />
         )}
         <ambientLight intensity={1} />
+        <pointLight position={[15, 20, 10]} intensity={2} color="#fff" />
       </Canvas>
     </>
   );

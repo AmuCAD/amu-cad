@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { CSG } from "three-csg-ts";
 
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
@@ -15,9 +17,14 @@ function Extrude() {
     state.isConfirm,
     state.setIsConfirm,
   ]);
-  const activeFunction = useStore(state => state.activeFunction);
-  const [extrudeObjects, setExtrudeObjects] = useState([]);
+  const [activeFunction, setActiveFunction] = useStore(state => [
+    state.activeFunction,
+    state.setActiveFunction,
+  ]);
   const [extrudeSettings, setExtrudeSettings] = useState({});
+  const [model, setModel] = useState(null);
+
+  const ref = useRef(null);
 
   useEffect(() => {
     const key = baseCoordinate && Object.keys(baseCoordinate)[0];
@@ -35,48 +42,46 @@ function Extrude() {
     });
   }, [extrudeSize, extrudeShape, baseCoordinate]);
 
+  const { scene } = useThree();
+
   useEffect(() => {
     if (isConfirm) {
-      setExtrudeObjects([
-        ...extrudeObjects,
-        <mesh position={position} rotation={rotation}>
-          <extrudeGeometry
-            attach="geometry"
-            args={[extrudeShape, extrudeSettings]}
-          />
-          <meshBasicMaterial
-            attach="material"
-            color="red"
-            side={THREE.DoubleSide}
-          />
-        </mesh>,
-      ]);
+      const extrudeMesh = ref.current.clone();
 
-      setIsConfirm(false);
+      if (model) {
+        scene.remove(model);
+        setModel(CSG.intersect(model, extrudeMesh));
+        scene.add(CSG.intersect(model, extrudeMesh));
+      } else {
+        setModel(extrudeMesh);
+        scene.add(extrudeMesh);
+      }
+
+      setActiveFunction(null);
       setExtrudeShape(null);
+      setIsConfirm(false);
     }
   }, [isConfirm]);
 
-  const { position, rotation } = baseCoordinate
-    ? getBasePosition(baseCoordinate)
-    : {};
+  const { position, rotation } = useMemo(() => {
+    return baseCoordinate ? getBasePosition(baseCoordinate) : {};
+  }, [baseCoordinate]);
 
   return (
     <>
       {activeFunction === "EXTRUDE" && extrudeShape && (
-        <mesh position={position} rotation={rotation}>
+        <mesh ref={ref} position={position} rotation={rotation}>
           <extrudeGeometry
             attach="geometry"
             args={[extrudeShape, extrudeSettings]}
           />
           <meshBasicMaterial
             attach="material"
-            color="red"
+            color="white"
             side={THREE.DoubleSide}
           />
         </mesh>
       )}
-      {extrudeObjects}
     </>
   );
 }

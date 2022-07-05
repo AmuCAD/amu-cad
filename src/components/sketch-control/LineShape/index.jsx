@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -7,18 +7,30 @@ import getBasePosition from "../../../utils/getBasePosition";
 import useModal from "../../../hooks/useModal";
 
 function LineShape() {
-  const baseCoordinate = useStore(state => state.baseCoordinate);
+  const [baseCoordinate, setBaseCoordinate] = useStore(state => [
+    state.baseCoordinate,
+    state.setBaseCoordinate,
+  ]);
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
     state.setActiveFunction,
   ]);
   const setExtrudeShape = useStore(state => state.setExtrudeShape);
+  const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [linePoints, setLinePoints] = useState([]);
   const [lines, setLines] = useState([]);
   const { showModal } = useModal();
 
+  useEffect(() => {
+    if (isConfirm) {
+      setLines([]);
+    }
+  }, [isConfirm]);
+
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
+  const value =
+    baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
   const { position, rotation } = baseCoordinate
     ? getBasePosition(baseCoordinate)
     : {};
@@ -71,6 +83,7 @@ function LineShape() {
             onClick={() => {
               setExtrudeShape(coordsToShape(linePoints, key));
               showModal({ type: "EXTRUDE" });
+              setBaseCoordinate({ [key]: value });
             }}
           >
             <shapeBufferGeometry

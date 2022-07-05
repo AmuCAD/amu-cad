@@ -15,6 +15,7 @@
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
     "three": "^0.142.0",
+    "three-csg-ts": "^3.1.10",
     "zustand": "^4.0.0-rc.1"
   },
   "scripts": {
