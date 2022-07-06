@@ -1,6 +1,6 @@
 import UndoButton from "../UndoButton";
 import RedoButton from "../RedoButton";
-import ImportButton from "../../model-control/ImportButton";
+import Import from "../../model-control/Import";
 import Save from "../../model-control/Save";
 import useStore from "../../../store";
 
@@ -53,7 +53,7 @@ function ModelController() {
       </button>
       <UndoButton />
       <RedoButton />
-      <ImportButton />
+      <Import />
       <Save format={"gltf"} />
       <Save format={"stl"} />
     </>

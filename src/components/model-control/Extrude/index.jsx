@@ -6,6 +6,8 @@ import { CSG } from "three-csg-ts";
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
 
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+
 function Extrude() {
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const extrudeSize = useStore(state => state.extrudeSize);
@@ -21,11 +23,26 @@ function Extrude() {
     state.activeFunction,
     state.setActiveFunction,
   ]);
-  const [extrudeSettings, setExtrudeSettings] = useState({});
   const operationType = useStore(state => state.operationType);
-  const [model, setModel] = useState(null);
+  const importFile = useStore(state => state.importFile);
+  const [model, setModel] = useStore(state => [state.model, state.setModel]);
+  const [extrudeSettings, setExtrudeSettings] = useState({});
 
   const ref = useRef(null);
+  const { scene } = useThree();
+
+  useEffect(() => {
+    const gltfLoader = new GLTFLoader();
+    const blobUrl = URL.createObjectURL(
+      new Blob([importFile], { type: "text.plain" }),
+    );
+
+    gltfLoader.load(blobUrl, gltf => {
+      scene.remove(model);
+      setModel(gltf.scene);
+      scene.add(gltf.scene);
+    });
+  }, [importFile]);
 
   useEffect(() => {
     const key = baseCoordinate && Object.keys(baseCoordinate)[0];
@@ -42,8 +59,6 @@ function Extrude() {
       bevelEnabled: false,
     });
   }, [extrudeSize, extrudeShape, baseCoordinate]);
-
-  const { scene } = useThree();
 
   useEffect(() => {
     if (isConfirm) {

@@ -2,7 +2,6 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
 import ControlPanel from "../../components/common/ControlPanel";
-import OriginPlanes from "../../components/common/OriginPlanes";
 import Model from "../../components/common/Model";
 import CameraDolly from "../../components/common/CameraDolly";
 import useStore from "../../store";
@@ -27,7 +26,6 @@ function EditPage() {
         }}
       >
         <OrbitControls />
-        <OriginPlanes />
         <Model />
         <Sketch />
         {isSketchMode && baseCoordinate && (

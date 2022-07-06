@@ -24,6 +24,10 @@ const useStore = create(
     setOperationType: type => set(() => ({ operationType: type })),
     blobUrl: null,
     setBlobUrl: url => set(() => ({ blobUrl: url })),
+    importFile: null,
+    setImportFile: file => set(() => ({ importFile: file })),
+    model: null,
+    setModel: mesh => set(() => ({ model: mesh })),
   })),
 );
 
