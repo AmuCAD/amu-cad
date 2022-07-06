@@ -41,12 +41,12 @@ function SketchController() {
       </button>
       <button
         onClick={() => {
-          activeFunction === "RECTANGLE"
+          activeFunction === "RECT"
             ? setActiveFunction(null)
-            : setActiveFunction("RECTANGLE");
+            : setActiveFunction("RECT");
         }}
       >
-        {activeFunction === "RECTANGLE" ? "직사각형(활)" : "직사각형"}
+        {activeFunction === "RECT" ? "직사각형(활)" : "직사각형"}
       </button>
       <button
         onClick={() => {

@@ -4,6 +4,7 @@ import * as THREE from "three";
 
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
+import coordsToShape from "../../../utils/coordsToShape";
 import useModal from "../../../hooks/useModal";
 
 function LineShape() {
@@ -18,13 +19,14 @@ function LineShape() {
   const setExtrudeShape = useStore(state => state.setExtrudeShape);
   const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
-  const [linePoints, setLinePoints] = useState([]);
-  const [lines, setLines] = useState([]);
+  const [points, setPoints] = useState([]);
+  const [shape, setShape] = useState(null);
+
   const { showModal } = useModal();
 
   useEffect(() => {
     if (isConfirm) {
-      setLines([]);
+      setShape(null);
     }
   }, [isConfirm]);
 
@@ -35,59 +37,24 @@ function LineShape() {
     ? getBasePosition(baseCoordinate)
     : {};
 
-  const coordsToShape = (coords, key) => {
-    const shape = new THREE.Shape();
-    const [x, y, z] = coords[0];
-
-    switch (key) {
-      case "x":
-        shape.moveTo(z, y);
-
-        for (const [x, y, z] of coords) {
-          shape.lineTo(z, y);
-        }
-
-        return shape;
-
-      case "y":
-        shape.moveTo(x, z);
-
-        for (const [x, y, z] of coords) {
-          shape.lineTo(x, z);
-        }
-
-        return shape;
-
-      default:
-        shape.moveTo(x, y);
-
-        for (const [x, y, z] of coords) {
-          shape.lineTo(x, y);
-        }
-
-        return shape;
-    }
-  };
-
   document.addEventListener("keydown", e => {
     if (activeFunction === "LINE" && e.key === "Escape") {
       setMouse({});
       setActiveFunction(null);
-      setLines([
-        ...lines,
+      setShape(
         <>
           <mesh
             position={position}
             rotation={rotation}
             onClick={() => {
-              setExtrudeShape(coordsToShape(linePoints, key));
+              setExtrudeShape(coordsToShape(points, key));
               showModal({ type: "EXTRUDE" });
               setBaseCoordinate({ [key]: value });
             }}
           >
             <shapeBufferGeometry
               attach="geometry"
-              args={[coordsToShape(linePoints, key)]}
+              args={[coordsToShape(points, key)]}
             />
             <meshBasicMaterial
               attach="material"
@@ -96,8 +63,8 @@ function LineShape() {
             />
           </mesh>
         </>,
-      ]);
-      setLinePoints([]);
+      );
+      setPoints([]);
     }
   });
 
@@ -112,7 +79,7 @@ function LineShape() {
         }}
         onClick={e => {
           if (activeFunction === "LINE") {
-            setLinePoints([...linePoints, Object.values(e.point)]);
+            setPoints([...points, Object.values(e.point)]);
           }
         }}
         position={position}
@@ -125,14 +92,13 @@ function LineShape() {
           side={THREE.DoubleSide}
         />
       </Plane>
-      {lines}
-      {linePoints[0] && (
+      {points[0] && (
         <>
-          <Line points={[...linePoints, Object.values(mouse)]} color="black" />
+          <Line points={[...points, Object.values(mouse)]} color="black" />
           <mesh position={position} rotation={rotation}>
             <shapeBufferGeometry
               attach="geometry"
-              args={[coordsToShape(linePoints, key)]}
+              args={[coordsToShape(points, key)]}
             />
             <meshBasicMaterial
               attach="material"
@@ -142,6 +108,7 @@ function LineShape() {
           </mesh>
         </>
       )}
+      {shape}
     </>
   );
 }

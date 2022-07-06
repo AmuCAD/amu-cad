@@ -7,7 +7,7 @@ function Import() {
 
   return (
     <>
-      <label for="input-file">불러오기</label>
+      <label htmlFor="input-file">불러오기</label>
       <input
         type="file"
         id="input-file"
