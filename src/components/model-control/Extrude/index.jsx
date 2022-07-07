@@ -2,6 +2,8 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import * as THREE from "three";
 import { CSG } from "three-csg-ts";
 
+import { Plane, Text } from "@react-three/drei";
+
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
 
@@ -30,6 +32,9 @@ function Extrude() {
   const [extrudeSettings, setExtrudeSettings] = useState({});
   const [prevPoint, setPrevPoint] = useState(null);
   const [sameCoordinate, setSameCoordinate] = useState(null);
+  const [mouse, setMouse] = useState(null);
+  const [dataToGetAngle, setDataToGetAngle] = useState([]);
+  const [angle, setAngle] = useState([0, 0, 0]);
 
   const ref = useRef(null);
 
@@ -96,6 +101,53 @@ function Extrude() {
     return sameCoordinate;
   };
 
+  useEffect(() => {
+    if (prevPoint) {
+      if (dataToGetAngle.length === 60) {
+        const countHash = {};
+
+        dataToGetAngle.forEach((elem, index) => {
+          if (countHash[elem]) {
+            countHash[elem]++;
+          } else {
+            countHash[elem] = 1;
+          }
+        });
+
+        let angle = "";
+        let max = 0;
+
+        for (const key in countHash) {
+          if (max < countHash[key]) {
+            angle = key;
+            max = countHash[key];
+          }
+        }
+
+        setAngle([Math.PI / 2, angle, 0]);
+      }
+
+      setDataToGetAngle(data => {
+        if (data.length === 60) {
+          data.splice(0, 3);
+        }
+
+        data.push(
+          Math.round(
+            Math.atan2(mouse.y - prevPoint.y, mouse.z - prevPoint.z) * 100,
+          ) / 100,
+          Math.round(
+            Math.atan2(mouse.y - prevPoint.y, mouse.x - prevPoint.x) * 100,
+          ) / 100,
+          Math.round(
+            Math.atan2(mouse.x - prevPoint.x, mouse.z - prevPoint.z) * 100,
+          ) / 100,
+        );
+        return data;
+      });
+    }
+  }, [prevPoint]);
+
   return (
     <>
       {activeFunction === "EXTRUDE" && extrudeShape && (
@@ -116,8 +168,13 @@ function Extrude() {
               setSameCoordinate(
                 findSameCoordinate(prevPoint, e.point, sameCoordinate),
               );
-              setPrevPoint(e.point);
             }
+
+            setMouse(e.point);
+            setPrevPoint(mouse);
+          }}
+          onPointerOut={() => {
+            setMouse(null);
           }}
           onClick={e => {
             e.stopPropagation();
@@ -135,6 +192,13 @@ function Extrude() {
           }
         />
       )}
+      {mouse && <Plane args={[10, 10]} position={Object.values(mouse)} rotation={angle}>
+        <meshStandardMaterial
+          attach="material"
+          color="red"
+          side={THREE.DoubleSide}
+        />
+      </Plane>}
     </>
   );
 }
