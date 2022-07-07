@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { Plane } from "@react-three/drei";
+import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
 
-import getBasePosition from "../../../utils/getBasePosition";
-import coordsToShape from "../../../utils/coordsToShape";
 import useStore from "../../../store";
+import getBasePosition from "../../../utils/getBasePosition";
 import useModal from "../../../hooks/useModal";
+import getDistance from "../../../utils/getDistance";
+import getCircleShape from "../../../utils/getCircleShape";
 
-function RectShape() {
+function CircleShape() {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
@@ -30,19 +31,6 @@ function RectShape() {
     }
   }, [isConfirm]);
 
-  useEffect(() => {
-    if (points[0]) {
-      const [x, y, z] = points[0];
-
-      setPoints([
-        points[0],
-        key === "y" ? [x, y, mouse.z] : [x, mouse.y, z],
-        Object.values(mouse),
-        key === "x" ? [x, y, mouse.z] : [mouse.x, y, z],
-      ]);
-    }
-  }, [mouse]);
-
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
   const value =
     baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
@@ -55,26 +43,39 @@ function RectShape() {
       <Plane
         args={[100, 100]}
         onPointerMove={e => {
-          if (activeFunction === "RECT") {
+          if (activeFunction === "CIRCLE") {
             setMouse(e.point);
           }
         }}
         onClick={e => {
-          if (activeFunction === "RECT") {
+          if (activeFunction === "CIRCLE") {
             if (points[0]) {
               setShape(
                 <mesh
                   position={position}
                   rotation={rotation}
                   onClick={() => {
-                    setExtrudeShape(coordsToShape(points, key));
+                    setExtrudeShape(
+                      getCircleShape(
+                        points,
+                        key,
+                        getDistance(points[0], Object.values(mouse)),
+                      ),
+                    );
                     showModal({ type: "EXTRUDE" });
                     setBaseCoordinate({ [key]: value });
                   }}
                 >
                   <shapeBufferGeometry
                     attach="geometry"
-                    args={[coordsToShape(points, key)]}
+                    args={[
+                      getCircleShape(
+                        points,
+                        key,
+                        getDistance(points[0], Object.values(mouse)),
+                      ),
+                      100,
+                    ]}
                   />
                   <meshBasicMaterial
                     attach="material"
@@ -102,21 +103,31 @@ function RectShape() {
         />
       </Plane>
       {points[0] && (
-        <mesh position={position} rotation={rotation}>
-          <shapeBufferGeometry
-            attach="geometry"
-            args={[coordsToShape(points, key)]}
-          />
-          <meshBasicMaterial
-            attach="material"
-            color="red"
-            side={THREE.DoubleSide}
-          />
-        </mesh>
+        <>
+          <Line points={[...points, Object.values(mouse)]} color="black" />
+          <mesh position={position} rotation={rotation}>
+            <shapeBufferGeometry
+              attach="geometry"
+              args={[
+                getCircleShape(
+                  points,
+                  key,
+                  getDistance(points[0], Object.values(mouse)),
+                ),
+                100,
+              ]}
+            />
+            <meshBasicMaterial
+              attach="material"
+              color="red"
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        </>
       )}
       {shape}
     </>
   );
 }
 
-export default RectShape;
+export default CircleShape;
