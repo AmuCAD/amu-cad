@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { CSG } from "three-csg-ts";
 
@@ -23,13 +22,16 @@ function Extrude() {
     state.activeFunction,
     state.setActiveFunction,
   ]);
+  const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
   const operationType = useStore(state => state.operationType);
   const importFile = useStore(state => state.importFile);
   const [model, setModel] = useStore(state => [state.model, state.setModel]);
+  const isSketchMode = useStore(state => state.isSketchMode);
   const [extrudeSettings, setExtrudeSettings] = useState({});
+  const [prevPoint, setPrevPoint] = useState(null);
+  const [sameCoordinate, setSameCoordinate] = useState(null);
 
   const ref = useRef(null);
-  const { scene } = useThree();
 
   useEffect(() => {
     const gltfLoader = new GLTFLoader();
@@ -64,10 +66,10 @@ function Extrude() {
       const modelMesh = model?.clone();
 
       if (model && operationType === "UNION") {
-        const result = CSG.union(modelMesh, extrudeMesh);
+        const result = CSG.union(extrudeMesh, modelMesh);
         setModel(result);
       } else if (model && operationType === "SUBTRACT") {
-        const result = CSG.subtract(modelMesh, extrudeMesh);
+        const result = CSG.subtract(extrudeMesh, modelMesh);
         setModel(result);
       } else {
         setModel(extrudeMesh);
@@ -83,6 +85,17 @@ function Extrude() {
     return baseCoordinate ? getBasePosition(baseCoordinate) : {};
   }, [baseCoordinate]);
 
+  const findSameCoordinate = (prevPoint, currentPoint, sameCoordinate) => {
+    for (const prop in prevPoint) {
+      if (!prevPoint.hasOwnProperty(prop)) continue;
+      if (prevPoint[prop] === currentPoint[prop]) {
+        return { [prop]: prevPoint[prop] };
+      }
+    }
+
+    return sameCoordinate;
+  };
+
   return (
     <>
       {activeFunction === "EXTRUDE" && extrudeShape && (
@@ -91,19 +104,35 @@ function Extrude() {
             attach="geometry"
             args={[extrudeShape, extrudeSettings]}
           />
-          <meshBasicMaterial
-            attach="material"
-            color="white"
-            side={THREE.DoubleSide}
-          />
+          <meshBasicMaterial attach="material" color="white" />
         </mesh>
       )}
       {model && (
         <primitive
-          onClick={() => {
-            console.log("click");
+          onPointerMove={e => {
+            e.stopPropagation();
+
+            if (isSketchMode) {
+              setSameCoordinate(
+                findSameCoordinate(prevPoint, e.point, sameCoordinate),
+              );
+              setPrevPoint(e.point);
+            }
+          }}
+          onClick={e => {
+            e.stopPropagation();
+
+            if (isSketchMode) {
+              setBaseCoordinate(sameCoordinate);
+            }
           }}
           object={model}
+          material={
+            new THREE.MeshBasicMaterial({
+              color: "white",
+              side: THREE.DoubleSide,
+            })
+          }
         />
       )}
     </>
