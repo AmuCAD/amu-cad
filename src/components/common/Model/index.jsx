@@ -7,7 +7,8 @@ function Model() {
 
   return (
     <>
-      {!model && <OriginPlanes />}
+      {/* {!model && <OriginPlanes />} */}
+      <OriginPlanes />
       <Extrude />
     </>
   );

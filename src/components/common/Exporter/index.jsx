@@ -7,8 +7,9 @@ import useStore from "../../../store";
 
 function Exporter() {
   const setBlobUrl = useStore(state => state.setBlobUrl);
+  const model = useStore(state => state.model);
+
   const { scene } = useThree();
-  const cloneScene = { ...scene };
 
   useEffect(() => {
     (async () => {
@@ -20,7 +21,7 @@ function Exporter() {
         stl: URL.createObjectURL(new Blob([stlJson], { type: "text.plain" })),
       });
     })();
-  }, [cloneScene]);
+  }, [model]);
 
   const convert = scene => {
     return new Promise(res => {

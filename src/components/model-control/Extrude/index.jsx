@@ -38,9 +38,7 @@ function Extrude() {
     );
 
     gltfLoader.load(blobUrl, gltf => {
-      scene.remove(model);
       setModel(gltf.scene);
-      scene.add(gltf.scene);
     });
   }, [importFile]);
 
@@ -67,19 +65,12 @@ function Extrude() {
 
       if (model && operationType === "UNION") {
         const result = CSG.union(modelMesh, extrudeMesh);
-
-        scene.remove(model);
         setModel(result);
-        scene.add(result);
       } else if (model && operationType === "SUBTRACT") {
         const result = CSG.subtract(modelMesh, extrudeMesh);
-
-        scene.remove(model);
         setModel(result);
-        scene.add(result);
       } else {
         setModel(extrudeMesh);
-        scene.add(extrudeMesh);
       }
 
       setActiveFunction(null);
@@ -106,6 +97,14 @@ function Extrude() {
             side={THREE.DoubleSide}
           />
         </mesh>
+      )}
+      {model && (
+        <primitive
+          onClick={() => {
+            console.log("click");
+          }}
+          object={model}
+        />
       )}
     </>
   );
