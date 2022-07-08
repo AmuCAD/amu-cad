@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import * as THREE from "three";
+import { Plane } from "@react-three/drei";
 import { CSG } from "three-csg-ts";
-
-import { Plane, Text } from "@react-three/drei";
+import * as THREE from "three";
 
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
@@ -102,11 +101,11 @@ function Extrude() {
   };
 
   useEffect(() => {
-    if (prevPoint) {
+    if (prevPoint && mouse) {
       if (dataToGetAngle.length === 60) {
         const countHash = {};
 
-        dataToGetAngle.forEach((elem, index) => {
+        dataToGetAngle.forEach(elem => {
           if (countHash[elem]) {
             countHash[elem]++;
           } else {
@@ -124,7 +123,26 @@ function Extrude() {
           }
         }
 
-        setAngle([Math.PI / 2, angle, 0]);
+        const angleIndexes = [];
+
+        dataToGetAngle.forEach((elem, index) => {
+          if (elem === Number(angle)) {
+            angleIndexes.push(index);
+          }
+        });
+
+        for (const index of angleIndexes) {
+          if (index === 3 || index === 6 || index === 9) {
+            setAngle([Math.PI / 2 - angle, 0, 0]);
+            break;
+          } else if (index === 4 || index === 7 || index === 10) {
+            setAngle([Math.PI / 2, angle, 0]);
+            break;
+          } else if (index === 5 || index === 8 || index === 11) {
+            setAngle([0, angle - Math.PI / 2, 0]);
+            break;
+          }
+        }
       }
 
       setDataToGetAngle(data => {
@@ -162,9 +180,8 @@ function Extrude() {
       {model && (
         <primitive
           onPointerMove={e => {
-            e.stopPropagation();
-
-            if (isSketchMode) {
+            if (isSketchMode && !baseCoordinate) {
+              e.stopPropagation();
               setSameCoordinate(
                 findSameCoordinate(prevPoint, e.point, sameCoordinate),
               );
@@ -177,9 +194,8 @@ function Extrude() {
             setMouse(null);
           }}
           onClick={e => {
-            e.stopPropagation();
-
-            if (isSketchMode) {
+            if (isSketchMode && !baseCoordinate) {
+              e.stopPropagation();
               setBaseCoordinate(sameCoordinate);
             }
           }}
@@ -192,13 +208,17 @@ function Extrude() {
           }
         />
       )}
-      {mouse && <Plane args={[10, 10]} position={Object.values(mouse)} rotation={angle}>
-        <meshStandardMaterial
-          attach="material"
-          color="red"
-          side={THREE.DoubleSide}
-        />
-      </Plane>}
+      {isSketchMode && !baseCoordinate && mouse && (
+        <Plane args={[5, 5]} position={Object.values(mouse)} rotation={angle}>
+          <meshStandardMaterial
+            attach="material"
+            color="red"
+            opacity={0.5}
+            side={THREE.DoubleSide}
+            transparent
+          />
+        </Plane>
+      )}
     </>
   );
 }
