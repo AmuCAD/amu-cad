@@ -3,15 +3,11 @@ import { IoMdClose } from "react-icons/io";
 
 import useModal from "../../../hooks/useModal";
 import useStore from "../../../store";
-import { useEffect } from "react";
 
 function ExtrudeModal() {
   const setExtrudeSize = useStore(state => state.setExtrudeSize);
   const setIsConfirm = useStore(state => state.setIsConfirm);
-  const [extrudeShape, setExtrudeShape] = useStore(state => [
-    state.extrudeShape,
-    state.setExtrudeShape,
-  ]);
+  const extrudeShape = useStore(state => state.extrudeShape);
   const activeFunction = useStore(state => state.activeFunction);
   const [operationType, setOperationType] = useStore(state => [
     state.operationType,

@@ -17,7 +17,7 @@ function VirtualPlane(props) {
       args={[10, 10]}
       rotation={props.rotation}
       onPointerMove={e => {
-        if (isSketchMode) {
+        if (isSketchMode && !baseCoordinate) {
           e.stopPropagation();
           setHover(true);
         }

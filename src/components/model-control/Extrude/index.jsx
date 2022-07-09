@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import { Plane } from "@react-three/drei";
 import { CSG } from "three-csg-ts";
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import useStore from "../../../store";
 import getBasePosition from "../../../utils/getBasePosition";
-
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import SelectionHelper from "../../common/SelectionHelper";
 
 function Extrude() {
   const baseCoordinate = useStore(state => state.baseCoordinate);
@@ -69,11 +68,11 @@ function Extrude() {
       const extrudeMesh = ref.current.clone();
       const modelMesh = model?.clone();
 
-      if (model && operationType === "UNION") {
-        const result = CSG.union(extrudeMesh, modelMesh);
+      if (modelMesh && operationType === "UNION") {
+        const result = CSG.union(modelMesh, extrudeMesh);
         setModel(result);
-      } else if (model && operationType === "SUBTRACT") {
-        const result = CSG.subtract(extrudeMesh, modelMesh);
+      } else if (modelMesh && operationType === "SUBTRACT") {
+        const result = CSG.subtract(modelMesh, extrudeMesh);
         setModel(result);
       } else {
         setModel(extrudeMesh);
@@ -174,7 +173,11 @@ function Extrude() {
             attach="geometry"
             args={[extrudeShape, extrudeSettings]}
           />
-          <meshBasicMaterial attach="material" color="white" />
+          <meshBasicMaterial
+            attach="material"
+            color="white"
+            side={THREE.DoubleSide}
+          />
         </mesh>
       )}
       {model && (
@@ -209,15 +212,7 @@ function Extrude() {
         />
       )}
       {isSketchMode && !baseCoordinate && mouse && (
-        <Plane args={[5, 5]} position={Object.values(mouse)} rotation={angle}>
-          <meshStandardMaterial
-            attach="material"
-            color="red"
-            opacity={0.5}
-            side={THREE.DoubleSide}
-            transparent
-          />
-        </Plane>
+        <SelectionHelper mouse={mouse} angle={angle} />
       )}
     </>
   );

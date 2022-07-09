@@ -38,7 +38,7 @@ function LineShape() {
     : {};
 
   document.addEventListener("keydown", e => {
-    if (activeFunction === "LINE" && e.key === "Escape") {
+    if (activeFunction === "LINE" && e.key === "Escape" && points[0]) {
       setMouse({});
       setActiveFunction(null);
       setShape(
