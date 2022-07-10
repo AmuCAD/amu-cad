@@ -32,15 +32,6 @@ function SketchController() {
       </button>
       <button
         onClick={() => {
-          activeFunction === "ARC"
-            ? setActiveFunction(null)
-            : setActiveFunction("ARC");
-        }}
-      >
-        {activeFunction === "ARC" ? "호(활)" : "호"}
-      </button>
-      <button
-        onClick={() => {
           activeFunction === "RECT"
             ? setActiveFunction(null)
             : setActiveFunction("RECT");
@@ -50,12 +41,12 @@ function SketchController() {
       </button>
       <button
         onClick={() => {
-          activeFunction === "SIZE"
+          activeFunction === "DELETE"
             ? setActiveFunction(null)
-            : setActiveFunction("SIZE");
+            : setActiveFunction("DELETE");
         }}
       >
-        {activeFunction === "SIZE" ? "치수 수정(활)" : "치수 수정"}
+        {activeFunction === "DELETE" ? "스케치 삭제(활)" : "스케치 삭제"}
       </button>
       <UndoButton />
       <RedoButton />

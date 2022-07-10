@@ -21,13 +21,13 @@ function CircleShape() {
   const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
-  const [shape, setShape] = useState(null);
+  const [shapes, setShapes] = useState([]);
 
   const { showModal } = useModal();
 
   useEffect(() => {
     if (isConfirm) {
-      setShape(null);
+      setShapes([]);
     }
   }, [isConfirm]);
 
@@ -51,7 +51,8 @@ function CircleShape() {
         onClick={e => {
           if (activeFunction === "CIRCLE") {
             if (points[0]) {
-              setShape(
+              setShapes([
+                ...shapes,
                 <mesh
                   position={position}
                   rotation={rotation}
@@ -84,7 +85,7 @@ function CircleShape() {
                     side={THREE.DoubleSide}
                   />
                 </mesh>,
-              );
+              ]);
               setMouse({});
               setPoints([]);
               setActiveFunction(null);
@@ -126,7 +127,7 @@ function CircleShape() {
           </mesh>
         </>
       )}
-      {shape}
+      {shapes}
     </>
   );
 }

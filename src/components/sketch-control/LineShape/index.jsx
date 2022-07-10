@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
+import { nanoid } from "nanoid";
 
 import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 import coordsToShape from "../../../utils/coordsToShape";
 import useModal from "../../../hooks/useModal";
+import deleteByKey from "../../../utils/deleteByKey";
 
 function LineShape() {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
@@ -20,15 +22,16 @@ function LineShape() {
   const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
-  const [shape, setShape] = useState(null);
+  const [shapes, setShapes] = useState([]);
+  const [selectedShapeId, setSelectedShapeId] = useState("");
 
   const { showModal } = useModal();
 
   useEffect(() => {
-    if (isConfirm) {
-      setShape(null);
+    if (isConfirm || activeFunction === "DELETE") {
+      setShapes(deleteByKey(shapes, selectedShapeId));
     }
-  }, [isConfirm]);
+  }, [isConfirm, selectedShapeId]);
 
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
   const value =
@@ -40,14 +43,17 @@ function LineShape() {
 
   document.addEventListener("keydown", e => {
     if (activeFunction === "LINE" && e.key === "Escape" && points[0]) {
-      setMouse({});
-      setActiveFunction(null);
-      setShape(
+      const id = nanoid();
+
+      setShapes([
+        ...shapes,
         <>
           <mesh
+            key={id}
             position={position}
             rotation={rotation}
             onClick={() => {
+              setSelectedShapeId(id);
               setExtrudeShape(coordsToShape(points, key));
               showModal({ type: "EXTRUDE" });
               setBaseCoordinate({ [key]: value });
@@ -64,8 +70,10 @@ function LineShape() {
             />
           </mesh>
         </>,
-      );
+      ]);
+      setMouse({});
       setPoints([]);
+      setActiveFunction(null);
     }
   });
 
@@ -109,7 +117,7 @@ function LineShape() {
           </mesh>
         </>
       )}
-      {shape}
+      {shapes}
     </>
   );
 }

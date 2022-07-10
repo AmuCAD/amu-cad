@@ -20,13 +20,13 @@ function RectShape() {
   const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
-  const [shape, setShape] = useState(null);
+  const [shapes, setShapes] = useState([]);
 
   const { showModal } = useModal();
 
   useEffect(() => {
     if (isConfirm) {
-      setShape(null);
+      setShapes([]);
     }
   }, [isConfirm]);
 
@@ -63,7 +63,8 @@ function RectShape() {
         onClick={e => {
           if (activeFunction === "RECT") {
             if (points[0]) {
-              setShape(
+              setShapes([
+                ...shapes,
                 <mesh
                   position={position}
                   rotation={rotation}
@@ -83,7 +84,7 @@ function RectShape() {
                     side={THREE.DoubleSide}
                   />
                 </mesh>,
-              );
+              ]);
               setMouse({});
               setPoints([]);
               setActiveFunction(null);
@@ -115,7 +116,7 @@ function RectShape() {
           />
         </mesh>
       )}
-      {shape}
+      {shapes}
     </>
   );
 }
