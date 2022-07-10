@@ -28,6 +28,9 @@ const useStore = create(
     setImportFile: file => set(() => ({ importFile: file })),
     model: null,
     setModel: mesh => set(() => ({ model: mesh })),
+    isForwardDirection: true,
+    setIsForwardDirection: () =>
+      set(state => ({ isForwardDirection: !state.isForwardDirection })),
   })),
 );
 

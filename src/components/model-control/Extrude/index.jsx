@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import { CSG } from "three-csg-ts";
+
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import useStore from "../../../store";
-import getBasePosition from "../../../utils/getBasePosition";
+import getPosition from "../../../utils/getPosition";
 import SelectionHelper from "../../common/SelectionHelper";
 
 function Extrude() {
@@ -27,6 +28,7 @@ function Extrude() {
   const importFile = useStore(state => state.importFile);
   const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const isSketchMode = useStore(state => state.isSketchMode);
+  const isForwardDirection = useStore(state => state.isForwardDirection);
   const [extrudeSettings, setExtrudeSettings] = useState({});
   const [prevPoint, setPrevPoint] = useState(null);
   const [sameCoordinate, setSameCoordinate] = useState(null);
@@ -48,25 +50,19 @@ function Extrude() {
   }, [importFile]);
 
   useEffect(() => {
-    const key = baseCoordinate && Object.keys(baseCoordinate)[0];
-    const value =
-      baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
-
     setExtrudeSettings({
-      depth:
-        extrudeSize *
-        ((key === "z" && value < 0) ||
-        ((key === "x" || key === "y") && value >= 0)
-          ? -1
-          : 1),
+      depth: extrudeSize,
       bevelEnabled: false,
     });
-  }, [extrudeSize, extrudeShape, baseCoordinate]);
+  }, [extrudeSize, extrudeShape]);
 
   useEffect(() => {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
       const modelMesh = model?.clone();
+
+      extrudeMesh.updateMatrix();
+      modelMesh?.updateMatrix();
 
       if (modelMesh && operationType === "UNION") {
         const result = CSG.union(modelMesh, extrudeMesh);
@@ -84,9 +80,19 @@ function Extrude() {
     }
   }, [isConfirm]);
 
+  const key = baseCoordinate && Object.keys(baseCoordinate)[0];
+  const value =
+    baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
+
   const { position, rotation } = useMemo(() => {
-    return baseCoordinate ? getBasePosition(baseCoordinate) : {};
+    return baseCoordinate ? getPosition(key, value) : {};
   }, [baseCoordinate]);
+
+  const extrudePosition = useMemo(() => {
+    return isForwardDirection
+      ? position
+      : getPosition(key, value, extrudeSize).position;
+  }, [position, extrudeSize, isForwardDirection]);
 
   const findSameCoordinate = (prevPoint, currentPoint, sameCoordinate) => {
     for (const prop in prevPoint) {
@@ -168,15 +174,17 @@ function Extrude() {
   return (
     <>
       {activeFunction === "EXTRUDE" && extrudeShape && (
-        <mesh ref={ref} position={position} rotation={rotation}>
+        <mesh ref={ref} position={extrudePosition} rotation={rotation}>
           <extrudeGeometry
             attach="geometry"
             args={[extrudeShape, extrudeSettings]}
           />
           <meshBasicMaterial
             attach="material"
-            color="white"
+            color={operationType === "UNION" ? "hotpink" : "skyblue"}
+            opacity={0.5}
             side={THREE.DoubleSide}
+            transparent
           />
         </mesh>
       )}

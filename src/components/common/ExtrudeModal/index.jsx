@@ -8,21 +8,20 @@ function ExtrudeModal() {
   const setExtrudeSize = useStore(state => state.setExtrudeSize);
   const setIsConfirm = useStore(state => state.setIsConfirm);
   const extrudeShape = useStore(state => state.extrudeShape);
-  const activeFunction = useStore(state => state.activeFunction);
+  const [activeFunction, setActiveFunction] = useStore(state => [
+    state.activeFunction,
+    state.setActiveFunction,
+  ]);
   const [operationType, setOperationType] = useStore(state => [
     state.operationType,
     state.setOperationType,
   ]);
+  const [isForwardDirection, setIsForwardDirection] = useStore(state => [
+    state.isForwardDirection,
+    state.setIsForwardDirection,
+  ]);
 
   const { hideModal } = useModal();
-
-  const handleInputChange = e => {
-    setExtrudeSize(e.target.value);
-  };
-
-  const handleConfirmButtonClick = e => {
-    setIsConfirm(true);
-  };
 
   return (
     <>
@@ -30,6 +29,7 @@ function ExtrudeModal() {
         <ModalOverlay
           onClick={() => {
             hideModal();
+            setActiveFunction(null);
           }}
         >
           <ModalContainer
@@ -40,6 +40,7 @@ function ExtrudeModal() {
             <CloseButton
               onClick={() => {
                 hideModal();
+                setActiveFunction(null);
               }}
             />
             <div>
@@ -59,11 +60,23 @@ function ExtrudeModal() {
               </SelectButton>
             </div>
             치수
-            <SizeInput type="number" onChange={handleInputChange}></SizeInput>
+            <SizeInput
+              type="number"
+              onChange={e => {
+                setExtrudeSize(e.target.value);
+              }}
+            ></SizeInput>
+            <button
+              onClick={() => {
+                setIsForwardDirection();
+              }}
+            >
+              방향 전환
+            </button>
             <ConfirmButton
               onClick={() => {
-                handleConfirmButtonClick();
                 hideModal();
+                setIsConfirm(true);
               }}
             >
               확인

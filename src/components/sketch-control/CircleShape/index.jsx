@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
 
 import useStore from "../../../store";
-import getBasePosition from "../../../utils/getBasePosition";
+import getPosition from "../../../utils/getPosition";
 import useModal from "../../../hooks/useModal";
 import getDistance from "../../../utils/getDistance";
 import getCircleShape from "../../../utils/getCircleShape";
@@ -34,9 +34,10 @@ function CircleShape() {
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
   const value =
     baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
-  const { position, rotation } = baseCoordinate
-    ? getBasePosition(baseCoordinate)
-    : {};
+
+  const { position, rotation } = useMemo(() => {
+    return baseCoordinate ? getPosition(key, value) : {};
+  }, [baseCoordinate]);
 
   return (
     <>
