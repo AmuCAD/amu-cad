@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
 import { nanoid } from "nanoid";
@@ -7,9 +7,8 @@ import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 import coordsToShape from "../../../utils/coordsToShape";
 import useModal from "../../../hooks/useModal";
-import deleteByKey from "../../../utils/deleteByKey";
 
-function LineShape() {
+function LineShape({ shapes, setShapes, setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
@@ -19,19 +18,10 @@ function LineShape() {
     state.setActiveFunction,
   ]);
   const setExtrudeShape = useStore(state => state.setExtrudeShape);
-  const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
-  const [shapes, setShapes] = useState([]);
-  const [selectedShapeId, setSelectedShapeId] = useState("");
 
   const { showModal } = useModal();
-
-  useEffect(() => {
-    if (isConfirm || activeFunction === "DELETE") {
-      setShapes(deleteByKey(shapes, selectedShapeId));
-    }
-  }, [isConfirm, selectedShapeId]);
 
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
   const value =
@@ -47,29 +37,27 @@ function LineShape() {
 
       setShapes([
         ...shapes,
-        <>
-          <mesh
-            key={id}
-            position={position}
-            rotation={rotation}
-            onClick={() => {
-              setSelectedShapeId(id);
-              setExtrudeShape(coordsToShape(points, key));
-              showModal({ type: "EXTRUDE" });
-              setBaseCoordinate({ [key]: value });
-            }}
-          >
-            <shapeBufferGeometry
-              attach="geometry"
-              args={[coordsToShape(points, key)]}
-            />
-            <meshBasicMaterial
-              attach="material"
-              color="red"
-              side={THREE.DoubleSide}
-            />
-          </mesh>
-        </>,
+        <mesh
+          key={id}
+          position={position}
+          rotation={rotation}
+          onClick={() => {
+            setSelectedShapeId(id);
+            setExtrudeShape(coordsToShape(points, key));
+            showModal({ type: "EXTRUDE" });
+            setBaseCoordinate({ [key]: value });
+          }}
+        >
+          <shapeBufferGeometry
+            attach="geometry"
+            args={[coordsToShape(points, key)]}
+          />
+          <meshBasicMaterial
+            attach="material"
+            color="red"
+            side={THREE.DoubleSide}
+          />
+        </mesh>,
       ]);
       setMouse({});
       setPoints([]);
@@ -117,7 +105,6 @@ function LineShape() {
           </mesh>
         </>
       )}
-      {shapes}
     </>
   );
 }

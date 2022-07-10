@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Line, Plane } from "@react-three/drei";
 import * as THREE from "three";
+import { nanoid } from "nanoid";
 
 import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
@@ -8,7 +9,7 @@ import useModal from "../../../hooks/useModal";
 import getDistance from "../../../utils/getDistance";
 import getCircleShape from "../../../utils/getCircleShape";
 
-function CircleShape() {
+function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
@@ -18,18 +19,10 @@ function CircleShape() {
     state.setActiveFunction,
   ]);
   const setExtrudeShape = useStore(state => state.setExtrudeShape);
-  const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
-  const [shapes, setShapes] = useState([]);
 
   const { showModal } = useModal();
-
-  useEffect(() => {
-    if (isConfirm) {
-      setShapes([]);
-    }
-  }, [isConfirm]);
 
   const key = baseCoordinate && Object.keys(baseCoordinate)[0];
   const value =
@@ -51,12 +44,16 @@ function CircleShape() {
         onClick={e => {
           if (activeFunction === "CIRCLE") {
             if (points[0]) {
+              const id = nanoid();
+
               setShapes([
                 ...shapes,
                 <mesh
+                  key={id}
                   position={position}
                   rotation={rotation}
                   onClick={() => {
+                    setSelectedShapeId(id);
                     setExtrudeShape(
                       getCircleShape(
                         points,
@@ -127,7 +124,6 @@ function CircleShape() {
           </mesh>
         </>
       )}
-      {shapes}
     </>
   );
 }

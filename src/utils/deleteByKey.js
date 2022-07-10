@@ -1,6 +1,6 @@
 const deleteByKey = (arr, id) => {
   return arr.filter(elem => {
-    if (elem.props.children.key !== id) {
+    if (elem.key !== id) {
       return elem;
     }
   });

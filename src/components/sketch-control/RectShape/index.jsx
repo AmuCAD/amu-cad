@@ -1,13 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { Plane } from "@react-three/drei";
 import * as THREE from "three";
+import { nanoid } from "nanoid";
 
+import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 import coordsToShape from "../../../utils/coordsToShape";
-import useStore from "../../../store";
 import useModal from "../../../hooks/useModal";
 
-function RectShape() {
+function RectShape({ shapes, setShapes, setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
@@ -17,18 +18,10 @@ function RectShape() {
     state.setActiveFunction,
   ]);
   const setExtrudeShape = useStore(state => state.setExtrudeShape);
-  const isConfirm = useStore(state => state.isConfirm);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
-  const [shapes, setShapes] = useState([]);
 
   const { showModal } = useModal();
-
-  useEffect(() => {
-    if (isConfirm) {
-      setShapes([]);
-    }
-  }, [isConfirm]);
 
   useEffect(() => {
     if (points[0]) {
@@ -62,13 +55,17 @@ function RectShape() {
         }}
         onClick={e => {
           if (activeFunction === "RECT") {
+            const id = nanoid();
+
             if (points[0]) {
               setShapes([
                 ...shapes,
                 <mesh
+                  key={id}
                   position={position}
                   rotation={rotation}
                   onClick={() => {
+                    setSelectedShapeId(id);
                     setExtrudeShape(coordsToShape(points, key));
                     showModal({ type: "EXTRUDE" });
                     setBaseCoordinate({ [key]: value });
@@ -116,7 +113,6 @@ function RectShape() {
           />
         </mesh>
       )}
-      {shapes}
     </>
   );
 }
