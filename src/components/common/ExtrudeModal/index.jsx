@@ -5,6 +5,7 @@ import useModal from "../../../hooks/useModal";
 import useStore from "../../../store";
 
 function ExtrudeModal() {
+  const baseCoordinate = useStore(state => state.baseCoordinate);
   const setExtrudeSize = useStore(state => state.setExtrudeSize);
   const setIsConfirm = useStore(state => state.setIsConfirm);
   const operationShapes = useStore(state => state.operationShapes);
@@ -22,7 +23,9 @@ function ExtrudeModal() {
 
   return (
     <>
-      {(activeFunction === "EXTRUDE" || activeFunction === "REVOLVE") &&
+      {(activeFunction === "EXTRUDE" ||
+        (activeFunction === "REVOLVE" &&
+          !baseCoordinate.hasOwnProperty("y"))) &&
         operationShapes && (
           <ModalOverlay
             onClick={() => {

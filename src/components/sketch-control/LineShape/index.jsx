@@ -4,9 +4,11 @@ import * as THREE from "three";
 import { nanoid } from "nanoid";
 
 import useStore from "../../../store";
-import getPosition from "../../../utils/getPosition";
-import coordsToShape from "../../../utils/coordsToShape";
 import useModal from "../../../hooks/useModal";
+import getPosition from "../../../utils/getPosition";
+import manipulateCoords from "../../../utils/manipulateCoords";
+import coordsToShape from "../../../utils/coordsToShape";
+import rotateCoord from "../../../utils/rotateCoord";
 
 function LineShape({ shapes, setShapes, setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
@@ -17,7 +19,7 @@ function LineShape({ shapes, setShapes, setSelectedShapeId }) {
     state.activeFunction,
     state.setActiveFunction,
   ]);
-  const setExtrudeShape = useStore(state => state.setExtrudeShape);
+  const setOperationShapes = useStore(state => state.setOperationShapes);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
 
@@ -41,16 +43,37 @@ function LineShape({ shapes, setShapes, setSelectedShapeId }) {
           key={id}
           position={position}
           rotation={rotation}
-          onClick={() => {
+          onClick={e => {
+            const box3 = new THREE.Box3().setFromObject(e.eventObject);
+            const vector = new THREE.Vector3();
+
+            box3.getCenter(vector);
+
+            const offset = Object.values(vector);
+            const manipulatedCoords = manipulateCoords(points, key);
+            const rotatedCoords = [];
+
+            for (let i = 0; i < manipulatedCoords.length; i++) {
+              rotatedCoords.push([
+                ...rotateCoord(offset, manipulatedCoords[i], Math.PI / 2),
+                manipulatedCoords[i][2],
+              ]);
+            }
+
+            box3.getCenter(vector);
             setSelectedShapeId(id);
-            setExtrudeShape(coordsToShape(points, key));
+            setOperationShapes({
+              extrudeShape: coordsToShape(manipulateCoords(points, key)),
+              revolveShape: coordsToShape(rotatedCoords, offset),
+              offset: offset,
+            });
             showModal({ type: "EXTRUDE" });
             setBaseCoordinate({ [key]: value });
           }}
         >
           <shapeBufferGeometry
             attach="geometry"
-            args={[coordsToShape(points, key)]}
+            args={[coordsToShape(manipulateCoords(points, key))]}
           />
           <meshBasicMaterial
             attach="material"
@@ -95,7 +118,7 @@ function LineShape({ shapes, setShapes, setSelectedShapeId }) {
           <mesh position={position} rotation={rotation}>
             <shapeBufferGeometry
               attach="geometry"
-              args={[coordsToShape(points, key)]}
+              args={[coordsToShape(manipulateCoords(points, key))]}
             />
             <meshBasicMaterial
               attach="material"

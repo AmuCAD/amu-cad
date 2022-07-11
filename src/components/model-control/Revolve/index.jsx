@@ -47,25 +47,32 @@ function Revolve({ model, setModel }) {
   }, [isConfirm]);
 
   useEffect(() => {
-    if (operationShapes) {
-      const radius = extrudeSize;
-      const segmentPoints = [];
-      const SEG_RADS = (2 * Math.PI) / 100;
-      const [x, y, z] = operationShapes.offset;
+    if (operationShapes && baseCoordinate) {
+      if (!baseCoordinate.hasOwnProperty("y")) {
+        const radius = extrudeSize;
+        const segmentPoints = [];
+        const [x, y, z] = operationShapes.offset;
+        const isCircleShape = operationShapes.revolveShape.curves.length === 1;
 
-      if (baseCoordinate.x) {
-        setPosition([x, y, z - radius]);
+        if (baseCoordinate.hasOwnProperty("z")) {
+          setPosition([x - radius, y, z]);
+        } else if (isCircleShape) {
+          setPosition([x, y, z - radius]);
+        } else {
+          setPosition([x, y, -radius]);
+        }
+
+        for (let i = 0; i < 100; i++) {
+          const x = radius * Math.cos(i * ((2 * Math.PI) / 100));
+          const y = radius * Math.sin(i * ((2 * Math.PI) / 100));
+
+          segmentPoints.push(new THREE.Vector3(x, y, 0));
+        }
+
+        setExtrudePath(new THREE.CatmullRomCurve3(segmentPoints, true));
       } else {
-        setPosition([x - radius, y, z]);
+        setOperationShapes(null);
       }
-
-      for (let i = 0; i < 100; i++) {
-        const x = radius * Math.cos(i * SEG_RADS);
-        const y = radius * Math.sin(i * SEG_RADS);
-        segmentPoints.push(new THREE.Vector3(x, y, 0));
-      }
-
-      setExtrudePath(new THREE.CatmullRomCurve3(segmentPoints, true));
     }
   }, [extrudeSize, operationShapes, baseCoordinate]);
 
@@ -87,18 +94,7 @@ function Revolve({ model, setModel }) {
             />
             <meshBasicMaterial
               attach="material"
-              color={"pink"}
-              side={THREE.DoubleSide}
-            />
-          </mesh>
-          <mesh>
-            <shapeBufferGeometry
-              attach="geometry"
-              args={[operationShapes.revolveShape]}
-            />
-            <meshBasicMaterial
-              attach="material"
-              color="blue"
+              color={operationType === "UNION" ? "hotpink" : "skyblue"}
               side={THREE.DoubleSide}
             />
           </mesh>

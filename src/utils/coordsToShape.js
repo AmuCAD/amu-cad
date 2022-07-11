@@ -1,16 +1,14 @@
 import * as THREE from "three";
 
-import manipulateCoords from "./manipulateCoords";
-
-const coordsToShape = (coords, base) => {
+const coordsToShape = (coords, offset = [0, 0]) => {
   const shape = new THREE.Shape();
-  const manipulatedCoords = manipulateCoords(coords, base);
-  const [x, y] = manipulatedCoords.shift();
+  const [x, y] = coords.shift();
+  const [offsetX, offsetY] = offset;
 
-  shape.moveTo(x, y);
+  shape.moveTo(x - offsetX, y - offsetY);
 
-  for (const [x, y] of manipulatedCoords) {
-    shape.lineTo(x, y);
+  for (const [x, y] of coords) {
+    shape.lineTo(x - offsetX, y - offsetY);
   }
 
   return shape;

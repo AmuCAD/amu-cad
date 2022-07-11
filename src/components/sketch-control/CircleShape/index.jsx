@@ -7,6 +7,7 @@ import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 import useModal from "../../../hooks/useModal";
 import getDistance from "../../../utils/getDistance";
+import manipulateCoords from "../../../utils/manipulateCoords";
 import getCircleShape from "../../../utils/getCircleShape";
 
 function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
@@ -56,13 +57,11 @@ function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
                     setSelectedShapeId(id);
                     setOperationShapes({
                       extrudeShape: getCircleShape(
-                        points,
-                        key,
+                        manipulateCoords(points, key),
                         getDistance(points[0], Object.values(mouse)),
                       ),
                       revolveShape: getCircleShape(
                         [[0, 0, 0]],
-                        null,
                         getDistance(points[0], Object.values(mouse)),
                       ),
                       offset: points[0],
@@ -75,8 +74,7 @@ function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
                     attach="geometry"
                     args={[
                       getCircleShape(
-                        points,
-                        key,
+                        manipulateCoords(points, key),
                         getDistance(points[0], Object.values(mouse)),
                       ),
                       100,
@@ -115,8 +113,7 @@ function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
               attach="geometry"
               args={[
                 getCircleShape(
-                  points,
-                  key,
+                  manipulateCoords(points, key),
                   getDistance(points[0], Object.values(mouse)),
                 ),
                 100,

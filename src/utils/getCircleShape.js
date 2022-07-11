@@ -1,11 +1,8 @@
 import * as THREE from "three";
 
-import manipulateCoords from "./manipulateCoords";
-
-const getCircleShape = (coords, base, radius) => {
+const getCircleShape = (coords, radius) => {
   const shape = new THREE.Shape();
-  const manipulatedCoords = manipulateCoords(coords, base);
-  const [x, y] = manipulatedCoords[0];
+  const [x, y] = coords[0];
 
   shape.absarc(x, y, radius);
 
