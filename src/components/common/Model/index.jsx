@@ -118,7 +118,9 @@ function Model() {
       {activeFunction === "EXTRUDE" && (
         <Extrude model={model} setModel={setModel} />
       )}
-      <Revolve />
+      {activeFunction === "REVOLVE" && (
+        <Revolve model={model} setModel={setModel} />
+      )}
       {model && (
         <primitive
           onPointerMove={e => {

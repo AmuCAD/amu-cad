@@ -14,8 +14,8 @@ const useStore = create(
     activeModal: {},
     setActiveModal: ({ type, props }) =>
       set(() => ({ activeModal: { type, props } })),
-    extrudeShape: null,
-    setExtrudeShape: shape => set(() => ({ extrudeShape: shape })),
+    operationShapes: null,
+    setOperationShapes: shapes => set(() => ({ operationShapes: shapes })),
     extrudeSize: 0,
     setExtrudeSize: size => set(() => ({ extrudeSize: size })),
     isConfirm: false,
@@ -26,8 +26,6 @@ const useStore = create(
     setBlobUrl: url => set(() => ({ blobUrl: url })),
     importFile: null,
     setImportFile: file => set(() => ({ importFile: file })),
-    model: null,
-    setModel: mesh => set(() => ({ model: mesh })),
     isForwardDirection: true,
     setIsForwardDirection: () =>
       set(state => ({ isForwardDirection: !state.isForwardDirection })),

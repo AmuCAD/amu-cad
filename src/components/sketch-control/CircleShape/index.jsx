@@ -18,7 +18,7 @@ function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
     state.activeFunction,
     state.setActiveFunction,
   ]);
-  const setExtrudeShape = useStore(state => state.setExtrudeShape);
+  const setOperationShapes = useStore(state => state.setOperationShapes);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
 
@@ -54,13 +54,19 @@ function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
                   rotation={rotation}
                   onClick={() => {
                     setSelectedShapeId(id);
-                    setExtrudeShape(
-                      getCircleShape(
+                    setOperationShapes({
+                      extrudeShape: getCircleShape(
                         points,
                         key,
                         getDistance(points[0], Object.values(mouse)),
                       ),
-                    );
+                      revolveShape: getCircleShape(
+                        [[0, 0, 0]],
+                        null,
+                        getDistance(points[0], Object.values(mouse)),
+                      ),
+                      offset: points[0],
+                    });
                     showModal({ type: "EXTRUDE" });
                     setBaseCoordinate({ [key]: value });
                   }}

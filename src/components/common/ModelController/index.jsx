@@ -1,5 +1,4 @@
 import UndoButton from "../UndoButton";
-import RedoButton from "../RedoButton";
 import Import from "../../model-control/Import";
 import Save from "../../model-control/Save";
 import useStore from "../../../store";
@@ -14,7 +13,7 @@ function ModelController() {
     state.setActiveFunction,
   ]);
   const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
-  const setExtrudeShape = useStore(state => state.setExtrudeShape);
+  const setOperationShapes = useStore(state => state.setOperationShapes);
 
   return (
     <>
@@ -34,7 +33,7 @@ function ModelController() {
             ? setActiveFunction(null)
             : setActiveFunction("EXTRUDE");
 
-          setExtrudeShape(null);
+          setOperationShapes(null);
           setIsSketchMode(false);
         }}
       >
@@ -46,13 +45,13 @@ function ModelController() {
             ? setActiveFunction(null)
             : setActiveFunction("REVOLVE");
 
+          setOperationShapes(null);
           setIsSketchMode(false);
         }}
       >
         {activeFunction === "REVOLVE" ? "회전(활)" : "회전"}
       </button>
       <UndoButton />
-      <RedoButton />
       <Import />
       <Save format={"gltf"} />
       <Save format={"stl"} />

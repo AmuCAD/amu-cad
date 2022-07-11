@@ -7,7 +7,7 @@ import useStore from "../../../store";
 function ExtrudeModal() {
   const setExtrudeSize = useStore(state => state.setExtrudeSize);
   const setIsConfirm = useStore(state => state.setIsConfirm);
-  const extrudeShape = useStore(state => state.extrudeShape);
+  const operationShapes = useStore(state => state.operationShapes);
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
     state.setActiveFunction,
@@ -16,74 +16,74 @@ function ExtrudeModal() {
     state.operationType,
     state.setOperationType,
   ]);
-  const [isForwardDirection, setIsForwardDirection] = useStore(state => [
-    state.isForwardDirection,
-    state.setIsForwardDirection,
-  ]);
+  const setIsForwardDirection = useStore(state => state.setIsForwardDirection);
 
   const { hideModal } = useModal();
 
   return (
     <>
-      {activeFunction === "EXTRUDE" && extrudeShape && (
-        <ModalOverlay
-          onClick={() => {
-            hideModal();
-            setActiveFunction(null);
-          }}
-        >
-          <ModalContainer
-            onClick={e => {
-              e.stopPropagation();
+      {(activeFunction === "EXTRUDE" || activeFunction === "REVOLVE") &&
+        operationShapes && (
+          <ModalOverlay
+            onClick={() => {
+              hideModal();
+              setActiveFunction(null);
             }}
           >
-            <CloseButton
-              onClick={() => {
-                hideModal();
-                setActiveFunction(null);
-              }}
-            />
-            <div>
-              <SelectButton
-                onClick={() => {
-                  setOperationType("SUBTRACT");
-                }}
-              >
-                {operationType === "SUBTRACT" ? "차집합(활)" : "차집합"}
-              </SelectButton>
-              <SelectButton
-                onClick={() => {
-                  setOperationType("UNION");
-                }}
-              >
-                {operationType === "UNION" ? "합집합(활)" : "합집합"}
-              </SelectButton>
-            </div>
-            치수
-            <SizeInput
-              type="number"
-              onChange={e => {
-                setExtrudeSize(e.target.value);
-              }}
-            ></SizeInput>
-            <button
-              onClick={() => {
-                setIsForwardDirection();
+            <ModalContainer
+              onClick={e => {
+                e.stopPropagation();
               }}
             >
-              방향 전환
-            </button>
-            <ConfirmButton
-              onClick={() => {
-                hideModal();
-                setIsConfirm(true);
-              }}
-            >
-              확인
-            </ConfirmButton>
-          </ModalContainer>
-        </ModalOverlay>
-      )}
+              <CloseButton
+                onClick={() => {
+                  hideModal();
+                  setActiveFunction(null);
+                }}
+              />
+              <div>
+                <SelectButton
+                  onClick={() => {
+                    setOperationType("SUBTRACT");
+                  }}
+                >
+                  {operationType === "SUBTRACT" ? "차집합(활)" : "차집합"}
+                </SelectButton>
+                <SelectButton
+                  onClick={() => {
+                    setOperationType("UNION");
+                  }}
+                >
+                  {operationType === "UNION" ? "합집합(활)" : "합집합"}
+                </SelectButton>
+              </div>
+              {activeFunction === "EXTRUDE" ? "치수" : "반지름"}
+              <SizeInput
+                type="number"
+                onChange={e => {
+                  setExtrudeSize(e.target.value);
+                }}
+              ></SizeInput>
+              {activeFunction === "EXTRUDE" && (
+                <button
+                  onClick={() => {
+                    setIsForwardDirection();
+                  }}
+                >
+                  방향 전환
+                </button>
+              )}
+              <ConfirmButton
+                onClick={() => {
+                  hideModal();
+                  setIsConfirm(true);
+                }}
+              >
+                확인
+              </ConfirmButton>
+            </ModalContainer>
+          </ModalOverlay>
+        )}
     </>
   );
 }

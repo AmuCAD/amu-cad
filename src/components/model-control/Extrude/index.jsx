@@ -6,9 +6,9 @@ import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 
 function Extrude({ model, setModel }) {
-  const [extrudeShape, setExtrudeShape] = useStore(state => [
-    state.extrudeShape,
-    state.setExtrudeShape,
+  const [operationShapes, setOperationShapes] = useStore(state => [
+    state.operationShapes,
+    state.setOperationShapes,
   ]);
   const [isConfirm, setIsConfirm] = useStore(state => [
     state.isConfirm,
@@ -28,7 +28,7 @@ function Extrude({ model, setModel }) {
       depth: extrudeSize,
       bevelEnabled: false,
     });
-  }, [extrudeSize, extrudeShape]);
+  }, [extrudeSize, operationShapes]);
 
   useEffect(() => {
     if (isConfirm) {
@@ -49,7 +49,7 @@ function Extrude({ model, setModel }) {
       }
 
       setActiveFunction(null);
-      setExtrudeShape(null);
+      setOperationShapes(null);
       setIsConfirm(false);
     }
   }, [isConfirm]);
@@ -70,11 +70,11 @@ function Extrude({ model, setModel }) {
 
   return (
     <>
-      {extrudeShape && (
+      {operationShapes && (
         <mesh ref={ref} position={extrudePosition} rotation={rotation}>
           <extrudeGeometry
             attach="geometry"
-            args={[extrudeShape, extrudeSettings]}
+            args={[operationShapes.extrudeShape, extrudeSettings]}
           />
           <meshBasicMaterial
             attach="material"

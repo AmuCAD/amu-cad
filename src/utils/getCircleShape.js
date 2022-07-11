@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import manipulateCoords from "./manipulatedCoords";
+import manipulateCoords from "./manipulateCoords";
 
 const getCircleShape = (coords, base, radius) => {
   const shape = new THREE.Shape();

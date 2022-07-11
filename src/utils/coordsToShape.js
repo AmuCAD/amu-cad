@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import manipulateCoords from "./manipulatedCoords";
+import manipulateCoords from "./manipulateCoords";
 
 const coordsToShape = (coords, base) => {
   const shape = new THREE.Shape();
