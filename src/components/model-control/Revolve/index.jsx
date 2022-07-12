@@ -4,7 +4,8 @@ import { CSG } from "three-csg-ts";
 
 import useStore from "../../../store";
 
-function Revolve({ model, setModel }) {
+function Revolve() {
+  const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const [isConfirm, setIsConfirm] = useStore(state => [
     state.isConfirm,
     state.setIsConfirm,

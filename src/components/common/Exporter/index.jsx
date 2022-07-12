@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useThree } from "@react-three/fiber";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import { STLExporter } from "three/examples/jsm/exporters/STLExporter";
 
@@ -9,12 +8,10 @@ function Exporter() {
   const setBlobUrl = useStore(state => state.setBlobUrl);
   const model = useStore(state => state.model);
 
-  const { scene } = useThree();
-
   useEffect(() => {
     (async () => {
-      const gltfJson = await convert(scene);
-      const stlJson = new STLExporter().parse(scene);
+      const gltfJson = await convert(model);
+      const stlJson = new STLExporter().parse(model);
 
       setBlobUrl({
         gltf: URL.createObjectURL(new Blob([gltfJson], { type: "text.plain" })),
@@ -23,12 +20,12 @@ function Exporter() {
     })();
   }, [model]);
 
-  const convert = scene => {
+  const convert = mesh => {
     return new Promise(res => {
       const exporter = new GLTFExporter();
 
       exporter.parse(
-        scene,
+        mesh,
         obj => {
           res(JSON.stringify(obj, null, 2));
         },

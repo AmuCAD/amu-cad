@@ -5,7 +5,8 @@ import { CSG } from "three-csg-ts";
 import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 
-function Extrude({ model, setModel }) {
+function Extrude() {
+  const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const [operationShapes, setOperationShapes] = useStore(state => [
     state.operationShapes,
     state.setOperationShapes,

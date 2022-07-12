@@ -13,6 +13,7 @@ function Model() {
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
+  const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const activeFunction = useStore(state => state.activeFunction);
   const isSketchMode = useStore(state => state.isSketchMode);
   const importFile = useStore(state => state.importFile);
@@ -21,7 +22,6 @@ function Model() {
   const [prevPoint, setPrevPoint] = useState(null);
   const [dataToGetAngle, setDataToGetAngle] = useState([]);
   const [angle, setAngle] = useState([0, 0, 0]);
-  const [model, setModel] = useState(null);
 
   useEffect(() => {
     const gltfLoader = new GLTFLoader();
@@ -30,7 +30,7 @@ function Model() {
     );
 
     gltfLoader.load(blobUrl, gltf => {
-      setModel(gltf.scene);
+      setModel(gltf.scene.children[0]);
     });
   }, [importFile]);
 
