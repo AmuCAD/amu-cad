@@ -30,7 +30,7 @@ function Revolve() {
   useEffect(() => {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
-      const modelMesh = models ? models[models.length - 1].clone() : null;
+      const modelMesh = models[0] ? models[models.length - 1].clone() : null;
 
       if (modelMesh && operationType === "UNION") {
         const result = CSG.union(modelMesh, extrudeMesh);

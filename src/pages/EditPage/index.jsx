@@ -11,6 +11,7 @@ import Model from "../../components/common/Model";
 function EditPage() {
   const isSketchMode = useStore(state => state.isSketchMode);
   const baseCoordinate = useStore(state => state.baseCoordinate);
+  const isOriginPlanesOn = useStore(state => state.isOriginPlanesOn);
 
   return (
     <>
@@ -27,7 +28,7 @@ function EditPage() {
         {isSketchMode && baseCoordinate && (
           <CameraDolly baseCoordinate={baseCoordinate} />
         )}
-        <OriginPlanes />
+        {isOriginPlanesOn && <OriginPlanes />}
         <Sketch />
         <Model />
       </Canvas>

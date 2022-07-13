@@ -3,18 +3,23 @@ import { useState, useEffect } from "react";
 import useStore from "../../../store";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import { STLExporter } from "three/examples/jsm/exporters/STLExporter";
+import IconButton from "../../common/shared/IconButton";
+import IconImg from "../../common/shared/IconImg";
+
+import saveIcon from "../../../assets/icons/save.png";
+import stlIcon from "../../../assets/icons/stl.png";
 
 function Exporter({ format }) {
-  const model = useStore(state => state.model);
+  const models = useStore(state => state.models);
   const [blobUrl, setBlobUrl] = useState(null);
 
   const filename = `scene.${format}`;
 
   useEffect(() => {
     (async () => {
-      if (model) {
-        const gltfJson = await convert(model);
-        const stlJson = new STLExporter().parse(model);
+      if (models[0]) {
+        const gltfJson = await convert(models[models.length - 1]);
+        const stlJson = new STLExporter().parse(models[models.length - 1]);
 
         setBlobUrl({
           gltf: URL.createObjectURL(
@@ -24,7 +29,7 @@ function Exporter({ format }) {
         });
       }
     })();
-  }, [model]);
+  }, [models]);
 
   const convert = mesh => {
     return new Promise(res => {
@@ -49,13 +54,14 @@ function Exporter({ format }) {
   };
 
   return (
-    <button
+    <IconButton
       onClick={() => {
         downloadFile(blobUrl[format], filename);
       }}
+      isActive={false}
     >
-      {format} 저장
-    </button>
+      <IconImg src={format === "gltf" ? saveIcon : stlIcon} alt="이미지 없음" />
+    </IconButton>
   );
 }
 

@@ -21,6 +21,13 @@ function GlobalModal() {
     );
   }
 
+  if (type === "HELP") {
+    return ReactDom.createPortal(
+      <InfoModal>HELP</InfoModal>,
+      document.getElementById("portal"),
+    );
+  }
+
   return null;
 }
 

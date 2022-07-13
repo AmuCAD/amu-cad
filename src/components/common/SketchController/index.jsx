@@ -1,5 +1,13 @@
 import useStore from "../../../store";
 import Undo from "../../model-control/Undo";
+import IconButton from "../../common/shared/IconButton";
+import IconImg from "../shared/IconImg";
+
+import lineIcon from "../../../assets/icons/line.png";
+import circleIcon from "../../../assets/icons/circle.png";
+import rectangleIcon from "../../../assets/icons/rectangle.png";
+import deleteIcon from "../../../assets/icons/delete.png";
+import exitIcon from "../../../assets/icons/exit.png";
 
 function SketchController() {
   const setIsSketchMode = useStore(state => state.setIsSketchMode);
@@ -11,52 +19,57 @@ function SketchController() {
 
   return (
     <>
-      <button
+      <IconButton
         onClick={() => {
           activeFunction === "LINE"
             ? setActiveFunction(null)
             : setActiveFunction("LINE");
         }}
+        isActive={activeFunction === "LINE"}
       >
-        {activeFunction === "LINE" ? "선(활)" : "선"}
-      </button>
-      <button
+        <IconImg src={lineIcon} alt="이미지 없음" />
+      </IconButton>
+      <IconButton
         onClick={() => {
           activeFunction === "CIRCLE"
             ? setActiveFunction(null)
             : setActiveFunction("CIRCLE");
         }}
+        isActive={activeFunction === "CIRCLE"}
       >
-        {activeFunction === "CIRCLE" ? "원(활)" : "원"}
-      </button>
-      <button
+        <IconImg src={circleIcon} alt="이미지 없음" />
+      </IconButton>
+      <IconButton
         onClick={() => {
           activeFunction === "RECT"
             ? setActiveFunction(null)
             : setActiveFunction("RECT");
         }}
+        isActive={activeFunction === "RECT"}
       >
-        {activeFunction === "RECT" ? "직사각형(활)" : "직사각형"}
-      </button>
-      <button
+        <IconImg src={rectangleIcon} alt="이미지 없음" />
+      </IconButton>
+      <IconButton
         onClick={() => {
           activeFunction === "DELETE"
             ? setActiveFunction(null)
             : setActiveFunction("DELETE");
         }}
+        isActive={activeFunction === "DELETE"}
       >
-        {activeFunction === "DELETE" ? "스케치 삭제(활)" : "스케치 삭제"}
-      </button>
+        <IconImg src={deleteIcon} alt="이미지 없음" />
+      </IconButton>
       <Undo />
-      <button
+      <IconButton
         onClick={() => {
           setIsSketchMode(false);
           setActiveFunction(null);
           setBaseCoordinate(null);
         }}
+        isActive={false}
       >
-        스케치 종료
-      </button>
+        <IconImg src={exitIcon} alt="이미지 없음" />
+      </IconButton>
     </>
   );
 }

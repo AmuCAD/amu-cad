@@ -1,5 +1,10 @@
 import { useEffect } from "react";
+
 import useStore from "../../../store";
+import IconButton from "../../common/shared/IconButton";
+import IconImg from "../../common/shared/IconImg";
+
+import undoIcon from "../../../assets/icons/undo.png";
 
 function Undo({ isModel }) {
   const [shapes, setShapes] = useStore(state => [
@@ -54,7 +59,11 @@ function Undo({ isModel }) {
     }
   };
 
-  return <button onClick={deleteLatestObject}>되돌리기</button>;
+  return (
+    <IconButton onClick={deleteLatestObject} isActive={false}>
+      <IconImg src={undoIcon} alt="이미지 없음" />
+    </IconButton>
+  );
 }
 
 export default Undo;

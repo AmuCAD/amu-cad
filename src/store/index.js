@@ -11,6 +11,8 @@ const useStore = create(
     activeFunction: null,
     setActiveFunction: functionName =>
       set(() => ({ activeFunction: functionName })),
+    isOriginPlanesOn: true,
+    setIsOriginPlanesOn: boolean => set(() => ({ isOriginPlanesOn: boolean })),
     activeModal: {},
     setActiveModal: ({ type, props }) =>
       set(() => ({ activeModal: { type, props } })),

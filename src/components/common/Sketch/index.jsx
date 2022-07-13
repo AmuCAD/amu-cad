@@ -16,7 +16,7 @@ function Sketch() {
   const [selectedShapeId, setSelectedShapeId] = useState("");
 
   useEffect(() => {
-    if (isConfirm || activeFunction === "DELETE") {
+    if (isConfirm || activeFunction === "DELETE" && shapes[0]) {
       setShapes(deleteById(shapes, selectedShapeId));
     }
   }, [isConfirm, activeFunction, shapes, selectedShapeId]);

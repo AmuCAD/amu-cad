@@ -2,6 +2,13 @@ import useStore from "../../../store";
 import Importer from "../../model-control/Importer";
 import Exporter from "../../model-control/Exporter";
 import Undo from "../../model-control/Undo";
+import IconButton from "../../common/shared/IconButton";
+import IconImg from "../shared/IconImg";
+
+import sketchIcon from "../../../assets/icons/sketch.png";
+import extrudeIcon from "../../../assets/icons/extrude.png";
+import revolveIcon from "../../../assets/icons/revolve.png";
+import originIcon from "../../../assets/icons/origin.png";
 
 function ModelController() {
   const [isSketchMode, setIsSketchMode] = useStore(state => [
@@ -12,22 +19,27 @@ function ModelController() {
     state.activeFunction,
     state.setActiveFunction,
   ]);
+  const [isOriginPlanesOn, setIsOriginPlanesOn] = useStore(state => [
+    state.isOriginPlanesOn,
+    state.setIsOriginPlanesOn,
+  ]);
   const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
   const setOperationShapes = useStore(state => state.setOperationShapes);
 
   return (
     <>
-      <button
+      <IconButton
         onClick={() => {
           isSketchMode ? setIsSketchMode(false) : setIsSketchMode(true);
 
           setActiveFunction(null);
           setBaseCoordinate(null);
         }}
+        isActive={isSketchMode}
       >
-        {isSketchMode ? "스케치 시작(활)" : "스케치 시작"}
-      </button>
-      <button
+        <IconImg src={sketchIcon} alt="이미지 없음" />
+      </IconButton>
+      <IconButton
         onClick={() => {
           activeFunction === "EXTRUDE"
             ? setActiveFunction(null)
@@ -36,10 +48,11 @@ function ModelController() {
           setOperationShapes(null);
           setIsSketchMode(false);
         }}
+        isActive={activeFunction === "EXTRUDE"}
       >
-        {activeFunction === "EXTRUDE" ? "돌출(활)" : "돌출"}
-      </button>
-      <button
+        <IconImg src={extrudeIcon} alt="이미지 없음" />
+      </IconButton>
+      <IconButton
         onClick={() => {
           activeFunction === "REVOLVE"
             ? setActiveFunction(null)
@@ -48,10 +61,21 @@ function ModelController() {
           setOperationShapes(null);
           setIsSketchMode(false);
         }}
+        isActive={activeFunction === "REVOLVE"}
       >
-        {activeFunction === "REVOLVE" ? "회전(활)" : "회전"}
-      </button>
+        <IconImg src={revolveIcon} alt="이미지 없음" />
+      </IconButton>
       <Undo isModel={true} />
+      <IconButton
+        onClick={() => {
+          isOriginPlanesOn
+            ? setIsOriginPlanesOn(false)
+            : setIsOriginPlanesOn(true);
+        }}
+        isActive={isOriginPlanesOn}
+      >
+        <IconImg src={originIcon} alt="이미지 없음" />
+      </IconButton>
       <Importer />
       <Exporter format={"gltf"} />
       <Exporter format={"stl"} />
