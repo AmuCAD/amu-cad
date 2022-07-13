@@ -25,8 +25,6 @@ const useStore = create(
     model: null,
     setModel: mesh => set(() => ({ model: mesh })),
     blobUrl: null,
-    setBlobUrl: url => set(() => ({ blobUrl: url })),
-    importFile: null,
     setImportFile: file => set(() => ({ importFile: file })),
     isForwardDirection: true,
     setIsForwardDirection: () =>

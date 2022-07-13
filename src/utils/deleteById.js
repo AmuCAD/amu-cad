@@ -1,4 +1,4 @@
-const deleteByKey = (arr, id) => {
+const deleteById = (arr, id) => {
   return arr.filter(elem => {
     if (elem.key !== id) {
       return elem;
@@ -6,4 +6,4 @@ const deleteByKey = (arr, id) => {
   });
 };
 
-export default deleteByKey;
+export default deleteById;

@@ -3,21 +3,22 @@ import * as THREE from "three";
 import { CSG } from "three-csg-ts";
 
 import useStore from "../../../store";
+import createCirclePath from "../../../utils/createCirclePath";
 
 function Revolve() {
-  const [model, setModel] = useStore(state => [state.model, state.setModel]);
-  const [isConfirm, setIsConfirm] = useStore(state => [
-    state.isConfirm,
-    state.setIsConfirm,
-  ]);
   const [operationShapes, setOperationShapes] = useStore(state => [
     state.operationShapes,
     state.setOperationShapes,
   ]);
+  const [isConfirm, setIsConfirm] = useStore(state => [
+    state.isConfirm,
+    state.setIsConfirm,
+  ]);
+  const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
-  const extrudeSize = useStore(state => state.extrudeSize);
+  const radius = useStore(state => state.extrudeSize);
   const [position, setPosition] = useState([0, 0, 0]);
   const [extrudePath, setExtrudePath] = useState(null);
 
@@ -27,9 +28,6 @@ function Revolve() {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
       const modelMesh = model?.clone();
-
-      extrudeMesh.updateMatrix();
-      modelMesh?.updateMatrix();
 
       if (modelMesh && operationType === "UNION") {
         const result = CSG.union(modelMesh, extrudeMesh);
@@ -49,13 +47,13 @@ function Revolve() {
 
   useEffect(() => {
     if (operationShapes && baseCoordinate) {
-      if (!baseCoordinate.hasOwnProperty("y")) {
-        const radius = extrudeSize;
-        const segmentPoints = [];
+      const base = Object.keys(baseCoordinate)[0];
+
+      if (base !== "y") {
         const [x, y, z] = operationShapes.offset;
         const isCircleShape = operationShapes.revolveShape.curves.length === 1;
 
-        if (baseCoordinate.hasOwnProperty("z")) {
+        if (base === "z") {
           setPosition([x - radius, y, z]);
         } else if (isCircleShape) {
           setPosition([x, y, z - radius]);
@@ -63,19 +61,12 @@ function Revolve() {
           setPosition([x, y, -radius]);
         }
 
-        for (let i = 0; i < 100; i++) {
-          const x = radius * Math.cos(i * ((2 * Math.PI) / 100));
-          const y = radius * Math.sin(i * ((2 * Math.PI) / 100));
-
-          segmentPoints.push(new THREE.Vector3(x, y, 0));
-        }
-
-        setExtrudePath(new THREE.CatmullRomCurve3(segmentPoints, true));
+        setExtrudePath(createCirclePath(radius));
       } else {
         setOperationShapes(null);
       }
     }
-  }, [extrudeSize, operationShapes, baseCoordinate]);
+  }, [radius, operationShapes, baseCoordinate]);
 
   return (
     <>

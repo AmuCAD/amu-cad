@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 import useStore from "../../../store";
-import OriginPlanes from "../../common/OriginPlanes";
 import Extrude from "../../model-control/Extrude";
 import Revolve from "../../model-control/Revolve";
 import SelectionHelper from "../SelectionHelper";
@@ -24,14 +23,16 @@ function Model() {
   const [angle, setAngle] = useState([0, 0, 0]);
 
   useEffect(() => {
-    const gltfLoader = new GLTFLoader();
-    const blobUrl = URL.createObjectURL(
-      new Blob([importFile], { type: "text.plain" }),
-    );
+    if (importFile) {
+      const gltfLoader = new GLTFLoader();
+      const blobUrl = URL.createObjectURL(
+        new Blob([importFile], { type: "text.plain" }),
+      );
 
-    gltfLoader.load(blobUrl, gltf => {
-      setModel(gltf.scene.children[0]);
-    });
+      gltfLoader.load(blobUrl, gltf => {
+        setModel(gltf.scene.children[0]);
+      });
+    }
   }, [importFile]);
 
   useEffect(() => {
@@ -113,13 +114,10 @@ function Model() {
 
   return (
     <>
-      {/* {!model && <OriginPlanes />} */}
-      <OriginPlanes />
-      {activeFunction === "EXTRUDE" && (
-        <Extrude model={model} setModel={setModel} />
-      )}
-      {activeFunction === "REVOLVE" && (
-        <Revolve model={model} setModel={setModel} />
+      {activeFunction === "EXTRUDE" && <Extrude />}
+      {activeFunction === "REVOLVE" && <Revolve />}
+      {isSketchMode && !baseCoordinate && mouse && (
+        <SelectionHelper mouse={mouse} angle={angle} />
       )}
       {model && (
         <primitive
@@ -151,9 +149,6 @@ function Model() {
             })
           }
         />
-      )}
-      {isSketchMode && !baseCoordinate && mouse && (
-        <SelectionHelper mouse={mouse} angle={angle} />
       )}
     </>
   );

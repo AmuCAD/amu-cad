@@ -1,20 +1,16 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 
-import ControlPanel from "../../components/common/ControlPanel";
-import Model from "../../components/common/Model";
-import CameraDolly from "../../components/common/CameraDolly";
 import useStore from "../../store";
-import useModal from "../../hooks/useModal";
+import ControlPanel from "../../components/common/ControlPanel";
+import CameraDolly from "../../components/common/CameraDolly";
+import OriginPlanes from "../../components/common/OriginPlanes";
 import Sketch from "../../components/common/Sketch";
-import Exporter from "../../components/common/Exporter";
+import Model from "../../components/common/Model";
 
 function EditPage() {
   const isSketchMode = useStore(state => state.isSketchMode);
   const baseCoordinate = useStore(state => state.baseCoordinate);
-  const { showModal } = useModal();
-
-  // showModal({ type: "test" });
 
   return (
     <>
@@ -26,14 +22,14 @@ function EditPage() {
         }}
       >
         <OrbitControls />
-        <Model />
-        <Sketch />
+        <ambientLight intensity={1} />
+        <pointLight position={[15, 20, 10]} intensity={2} color="#fff" />
         {isSketchMode && baseCoordinate && (
           <CameraDolly baseCoordinate={baseCoordinate} />
         )}
-        <ambientLight intensity={1} />
-        <pointLight position={[15, 20, 10]} intensity={2} color="#fff" />
-        <Exporter />
+        <OriginPlanes />
+        <Sketch />
+        <Model />
       </Canvas>
     </>
   );

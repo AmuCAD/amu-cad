@@ -6,7 +6,6 @@ import useStore from "../../../store";
 import getPosition from "../../../utils/getPosition";
 
 function Extrude() {
-  const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const [operationShapes, setOperationShapes] = useStore(state => [
     state.operationShapes,
     state.setOperationShapes,
@@ -15,6 +14,7 @@ function Extrude() {
     state.isConfirm,
     state.setIsConfirm,
   ]);
+  const [model, setModel] = useStore(state => [state.model, state.setModel]);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
@@ -36,9 +36,6 @@ function Extrude() {
       const extrudeMesh = ref.current.clone();
       const modelMesh = model?.clone();
 
-      extrudeMesh.updateMatrix();
-      modelMesh?.updateMatrix();
-
       if (modelMesh && operationType === "UNION") {
         const result = CSG.union(modelMesh, extrudeMesh);
         setModel(result);
@@ -55,24 +52,24 @@ function Extrude() {
     }
   }, [isConfirm]);
 
-  const key = baseCoordinate && Object.keys(baseCoordinate)[0];
-  const value =
-    baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
-
   const { position, rotation } = useMemo(() => {
-    return baseCoordinate ? getPosition(key, value) : {};
-  }, [baseCoordinate]);
+    const [base, offset] = baseCoordinate
+      ? Object.entries(baseCoordinate)[0]
+      : [];
 
-  const extrudePosition = useMemo(() => {
-    return isForwardDirection
-      ? position
-      : getPosition(key, value, extrudeSize).position;
-  }, [position, extrudeSize, isForwardDirection]);
+    if (isForwardDirection && baseCoordinate) {
+      return getPosition(base, offset);
+    } else if (baseCoordinate) {
+      return getPosition(base, offset, extrudeSize);
+    } else {
+      return {};
+    }
+  }, [baseCoordinate, extrudeSize, isForwardDirection]);
 
   return (
     <>
       {operationShapes && (
-        <mesh ref={ref} position={extrudePosition} rotation={rotation}>
+        <mesh ref={ref} position={position} rotation={rotation}>
           <extrudeGeometry
             attach="geometry"
             args={[operationShapes.extrudeShape, extrudeSettings]}

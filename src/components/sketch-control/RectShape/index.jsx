@@ -9,21 +9,23 @@ import getPosition from "../../../utils/getPosition";
 import manipulateCoords from "../../../utils/manipulateCoords";
 import coordsToShape from "../../../utils/coordsToShape";
 import rotateCoord from "../../../utils/rotateCoord";
+import getMeshCenter from "../../../utils/getMeshCenter";
 
 function RectShape({ shapes, setShapes, setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
-  const [activeFunction, setActiveFunction] = useStore(state => [
-    state.activeFunction,
-    state.setActiveFunction,
-  ]);
+  const setActiveFunction = useStore(state => state.setActiveFunction);
   const setOperationShapes = useStore(state => state.setOperationShapes);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
 
   const { showModal } = useModal();
+
+  const [base, offset] = baseCoordinate
+    ? Object.entries(baseCoordinate)[0]
+    : [];
 
   useEffect(() => {
     if (points[0]) {
@@ -31,87 +33,74 @@ function RectShape({ shapes, setShapes, setSelectedShapeId }) {
 
       setPoints([
         points[0],
-        key === "y" ? [x, y, mouse.z] : [x, mouse.y, z],
+        base === "y" ? [x, y, mouse.z] : [x, mouse.y, z],
         Object.values(mouse),
-        key === "x" ? [x, y, mouse.z] : [mouse.x, y, z],
+        base === "x" ? [x, y, mouse.z] : [mouse.x, y, z],
       ]);
     }
-  }, [mouse]);
-
-  const key = baseCoordinate && Object.keys(baseCoordinate)[0];
-  const value =
-    baseCoordinate && baseCoordinate[Object.keys(baseCoordinate)[0]];
+  }, [points, base, mouse]);
 
   const { position, rotation } = useMemo(() => {
-    return baseCoordinate ? getPosition(key, value) : {};
-  }, [baseCoordinate]);
+    return baseCoordinate ? getPosition(base, offset) : {};
+  }, [baseCoordinate, base, offset]);
 
   return (
     <>
       <Plane
         args={[100, 100]}
         onPointerMove={e => {
-          if (activeFunction === "RECT") {
-            setMouse(e.point);
-          }
+          setMouse(e.point);
         }}
         onClick={e => {
-          if (activeFunction === "RECT") {
-            const id = nanoid();
+          const id = nanoid();
 
-            if (points[0]) {
-              setShapes([
-                ...shapes,
-                <mesh
-                  key={id}
-                  position={position}
-                  rotation={rotation}
-                  onClick={e => {
-                    const box3 = new THREE.Box3().setFromObject(e.eventObject);
-                    const vector = new THREE.Vector3();
+          const handleShapeClick = e => {
+            const offset = Object.values(getMeshCenter(e.eventObject));
+            const manipulatedCoords = manipulateCoords(points, base);
+            const rotatedCoords = [];
 
-                    box3.getCenter(vector);
-
-                    const offset = Object.values(vector);
-                    const manipulatedCoords = manipulateCoords(points, key);
-                    const rotatedCoords = [];
-
-                    for (let i = 0; i < manipulatedCoords.length; i++) {
-                      rotatedCoords.push([
-                        ...rotateCoord(offset, manipulatedCoords[i], Math.PI / 2),
-                        manipulatedCoords[i][2],
-                      ]);
-                    }
-
-                    setSelectedShapeId(id);
-                    setOperationShapes({
-                      extrudeShape: coordsToShape(
-                        manipulateCoords(points, key),
-                      ),
-                      revolveShape: coordsToShape(rotatedCoords, offset),
-                      offset: offset,
-                    });
-                    showModal({ type: "EXTRUDE" });
-                    setBaseCoordinate({ [key]: value });
-                  }}
-                >
-                  <shapeBufferGeometry
-                    attach="geometry"
-                    args={[coordsToShape(manipulateCoords(points, key))]}
-                  />
-                  <meshBasicMaterial
-                    attach="material"
-                    color="red"
-                    side={THREE.DoubleSide}
-                  />
-                </mesh>,
+            for (let i = 0; i < manipulatedCoords.length; i++) {
+              rotatedCoords.push([
+                ...rotateCoord(offset, manipulatedCoords[i], Math.PI / 2),
+                manipulatedCoords[i][2],
               ]);
-              setMouse({});
-              setPoints([]);
-              setActiveFunction(null);
-            } else {
-              setPoints([Object.values(e.point)]);
             }
+
+            setSelectedShapeId(id);
+            setOperationShapes({
+              extrudeShape: coordsToShape(manipulateCoords(points, base)),
+              revolveShape: coordsToShape(rotatedCoords, offset),
+              offset: offset,
+            });
+            showModal({ type: "EXTRUDE" });
+            setBaseCoordinate(baseCoordinate);
+          };
+
+          if (points[0]) {
+            setShapes([
+              ...shapes,
+              <mesh
+                key={id}
+                position={position}
+                rotation={rotation}
+                onClick={handleShapeClick}
+              >
+                <shapeBufferGeometry
+                  attach="geometry"
+                  args={[coordsToShape(manipulateCoords(points, base))]}
+                />
+                <meshBasicMaterial
+                  attach="material"
+                  color="red"
+                  side={THREE.DoubleSide}
+                />
+              </mesh>,
+            ]);
+            setMouse({});
+            setPoints([]);
+            setActiveFunction(null);
+          } else {
+            setPoints([Object.values(e.point)]);
           }
         }}
         position={position}
@@ -128,7 +117,7 @@ function RectShape({ shapes, setShapes, setSelectedShapeId }) {
         <mesh position={position} rotation={rotation}>
           <shapeBufferGeometry
             attach="geometry"
-            args={[coordsToShape(manipulateCoords(points, key))]}
+            args={[coordsToShape(manipulateCoords(points, base))]}
           />
           <meshBasicMaterial
             attach="material"
