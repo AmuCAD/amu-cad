@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import useStore from "../../../store";
+import useModal from "../../../hooks/useModal";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import { STLExporter } from "three/examples/jsm/exporters/STLExporter";
 import IconButton from "../../common/shared/IconButton";
@@ -12,6 +13,8 @@ import stlIcon from "../../../assets/icons/stl.png";
 function Exporter({ format }) {
   const models = useStore(state => state.models);
   const [blobUrl, setBlobUrl] = useState(null);
+
+  const { showModal } = useModal();
 
   const filename = `scene.${format}`;
 
@@ -56,7 +59,24 @@ function Exporter({ format }) {
   return (
     <IconButton
       onClick={() => {
-        downloadFile(blobUrl[format], filename);
+        if (models[0]) {
+          downloadFile(blobUrl[format], filename);
+          showModal({
+            type: "INFO",
+            props: {
+              content: `현재 작업물을 ${
+                format === "gltf" ? "glTF" : "STL"
+              } 형식으로 PC에 저장하였습니다`,
+            },
+          });
+        } else {
+          showModal({
+            type: "INFO",
+            props: {
+              content: "저장할 작업물이 없습니다.",
+            },
+          });
+        }
       }}
       isActive={false}
     >

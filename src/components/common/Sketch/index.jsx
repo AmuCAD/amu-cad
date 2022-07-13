@@ -19,7 +19,7 @@ function Sketch() {
     if (isConfirm || activeFunction === "DELETE" && shapes[0]) {
       setShapes(deleteById(shapes, selectedShapeId));
     }
-  }, [isConfirm, activeFunction, shapes, selectedShapeId]);
+  }, [isConfirm, activeFunction, selectedShapeId]);
 
   return (
     <>

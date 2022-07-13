@@ -1,4 +1,5 @@
 import useStore from "../../../store";
+import useModal from "../../../hooks/useModal";
 import Importer from "../../model-control/Importer";
 import Exporter from "../../model-control/Exporter";
 import Undo from "../../model-control/Undo";
@@ -26,11 +27,24 @@ function ModelController() {
   const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
   const setOperationShapes = useStore(state => state.setOperationShapes);
 
+  const { showModal, hideModal } = useModal();
+
   return (
     <>
       <IconButton
         onClick={() => {
-          isSketchMode ? setIsSketchMode(false) : setIsSketchMode(true);
+          if (isSketchMode) {
+            setIsSketchMode(false);
+            hideModal();
+          } else {
+            setIsSketchMode(true);
+            showModal({
+              type: "INFO",
+              props: {
+                content: "수직이나 수평의 작업 평면을 선택하세요. ",
+              },
+            });
+          }
 
           setActiveFunction(null);
           setBaseCoordinate(null);
@@ -41,9 +55,18 @@ function ModelController() {
       </IconButton>
       <IconButton
         onClick={() => {
-          activeFunction === "EXTRUDE"
-            ? setActiveFunction(null)
-            : setActiveFunction("EXTRUDE");
+          if (activeFunction === "EXTRUDE") {
+            setActiveFunction(null);
+            hideModal();
+          } else {
+            setActiveFunction("EXTRUDE");
+            showModal({
+              type: "INFO",
+              props: {
+                content: "돌출할 스케치를 선택하세요. ",
+              },
+            });
+          }
 
           setOperationShapes(null);
           setIsSketchMode(false);
@@ -54,12 +77,21 @@ function ModelController() {
       </IconButton>
       <IconButton
         onClick={() => {
-          activeFunction === "REVOLVE"
-            ? setActiveFunction(null)
-            : setActiveFunction("REVOLVE");
+          if (activeFunction === "REVOLVE") {
+            setActiveFunction(null);
+            hideModal();
+          } else {
+            setActiveFunction("REVOLVE");
+            showModal({
+              type: "INFO",
+              props: {
+                content: "회전 돌출할 스케치를 선택하세요. ",
+              },
+            });
 
-          setOperationShapes(null);
-          setIsSketchMode(false);
+            setOperationShapes(null);
+            setIsSketchMode(false);
+          }
         }}
         isActive={activeFunction === "REVOLVE"}
       >

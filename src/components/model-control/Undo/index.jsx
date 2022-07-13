@@ -23,14 +23,7 @@ function Undo({ isModel }) {
       targetList.shift();
       setModels(targetList);
     }
-
-    if (shapes.length === 16) {
-      const targetList = shapes.slice();
-
-      targetList.shift();
-      setShapes(targetList);
-    }
-  }, [models, shapes]);
+  }, [models]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);

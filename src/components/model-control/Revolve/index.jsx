@@ -41,7 +41,7 @@ function Revolve() {
       } else if (modelMesh && operationType === "SUBTRACT") {
         const result = CSG.subtract(modelMesh, extrudeMesh);
         setModels([...models, result]);
-      } else {
+      } else if (operationType === "UNION") {
         setModels([extrudeMesh]);
       }
 

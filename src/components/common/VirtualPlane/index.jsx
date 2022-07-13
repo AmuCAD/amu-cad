@@ -32,13 +32,13 @@ function VirtualPlane(props) {
 
           switch (props.text) {
             case "XY":
-              setBaseCoordinate({ z: 0.0001 });
+              setBaseCoordinate({ z: 0 });
               break;
             case "XZ":
-              setBaseCoordinate({ y: 0.0001 });
+              setBaseCoordinate({ y: 0 });
               break;
             default:
-              setBaseCoordinate({ x: 0.0001 });
+              setBaseCoordinate({ x: 0 });
           }
         }
       }}

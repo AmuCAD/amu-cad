@@ -7,9 +7,9 @@ import ExtrudeModal from "../ExtrudeModal";
 function GlobalModal() {
   const { type, props } = useStore(state => state.activeModal);
 
-  if (type === "test") {
+  if (type === "INFO") {
     return ReactDom.createPortal(
-      <InfoModal>test</InfoModal>,
+      <InfoModal>{props.content}</InfoModal>,
       document.getElementById("portal"),
     );
   }

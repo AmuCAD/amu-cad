@@ -12,7 +12,7 @@ function InfoModal({ children }) {
         hideModal();
       }}
     >
-      {children}
+      <Content>{children}</Content>
     </ModalContainer>
   );
 }
@@ -21,12 +21,18 @@ const ModalContainer = styled.div`
   position: absolute;
   bottom: 50px;
   left: 30px;
-  width: 400px;
-  height: 130px;
+  padding: 30px;
   border-radius: 15px;
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 0px 3px;
   z-index: 1000;
+`;
+
+const Content = styled.p`
+  margin: 0;
+  text-align: left;
+  font-size: 17px;
+  white-space: pre-wrap;
 `;
 
 export default InfoModal;

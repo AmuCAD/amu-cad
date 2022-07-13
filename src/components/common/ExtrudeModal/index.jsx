@@ -77,7 +77,8 @@ function ExtrudeModal() {
                 ></SizeInput>
                 {activeFunction === "EXTRUDE" && (
                   <DirectionChangeButton
-                    onClick={() => {
+                    onClick={e => {
+                      e.preventDefault();
                       setIsForwardDirection();
                     }}
                   >
@@ -87,7 +88,8 @@ function ExtrudeModal() {
               </Flex>
               <ConfirmButton
                 type="submit"
-                onClick={() => {
+                onClick={e => {
+                  e.preventDefault();
                   hideModal();
                   setIsConfirm(true);
                 }}
