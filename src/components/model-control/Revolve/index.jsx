@@ -10,6 +10,10 @@ function Revolve() {
     state.operationShapes,
     state.setOperationShapes,
   ]);
+  const [radius, setRadius] = useStore(state => [
+    state.extrudeSize,
+    state.setExtrudeSize,
+  ]);
   const [isConfirm, setIsConfirm] = useStore(state => [
     state.isConfirm,
     state.setIsConfirm,
@@ -21,7 +25,6 @@ function Revolve() {
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
-  const radius = useStore(state => state.extrudeSize);
   const [position, setPosition] = useState([0, 0, 0]);
   const [extrudePath, setExtrudePath] = useState(null);
 
@@ -45,6 +48,7 @@ function Revolve() {
       setActiveFunction(null);
       setOperationShapes(null);
       setIsConfirm(false);
+      setRadius(0);
     }
   }, [isConfirm]);
 

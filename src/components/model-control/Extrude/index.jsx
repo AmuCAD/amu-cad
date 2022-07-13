@@ -10,6 +10,10 @@ function Extrude() {
     state.operationShapes,
     state.setOperationShapes,
   ]);
+  const [extrudeSize, setExtrudeSize] = useStore(state => [
+    state.extrudeSize,
+    state.setExtrudeSize,
+  ]);
   const [isConfirm, setIsConfirm] = useStore(state => [
     state.isConfirm,
     state.setIsConfirm,
@@ -18,11 +22,10 @@ function Extrude() {
     state.models,
     state.setModels,
   ]);
+  const isForwardDirection = useStore(state => state.isForwardDirection);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
-  const extrudeSize = useStore(state => state.extrudeSize);
-  const isForwardDirection = useStore(state => state.isForwardDirection);
   const [extrudeSettings, setExtrudeSettings] = useState({});
 
   const ref = useRef(null);
@@ -52,6 +55,7 @@ function Extrude() {
 
       setActiveFunction(null);
       setOperationShapes(null);
+      setExtrudeSize(0);
       setIsConfirm(false);
     }
   }, [isConfirm]);

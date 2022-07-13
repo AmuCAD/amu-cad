@@ -3,12 +3,13 @@ import { IoMdClose } from "react-icons/io";
 
 import useModal from "../../../hooks/useModal";
 import useStore from "../../../store";
+import IconButton from "../../common/shared/IconButton";
+
+import unionIcon from "../../../assets/icons/union.png";
+import subtractIcon from "../../../assets/icons/subtract.png";
+import directionIcon from "../../../assets/icons/direction.png";
 
 function ExtrudeModal() {
-  const baseCoordinate = useStore(state => state.baseCoordinate);
-  const setExtrudeSize = useStore(state => state.setExtrudeSize);
-  const setIsConfirm = useStore(state => state.setIsConfirm);
-  const operationShapes = useStore(state => state.operationShapes);
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
     state.setActiveFunction,
@@ -17,7 +18,11 @@ function ExtrudeModal() {
     state.operationType,
     state.setOperationType,
   ]);
+  const setExtrudeSize = useStore(state => state.setExtrudeSize);
   const setIsForwardDirection = useStore(state => state.setIsForwardDirection);
+  const baseCoordinate = useStore(state => state.baseCoordinate);
+  const setIsConfirm = useStore(state => state.setIsConfirm);
+  const operationShapes = useStore(state => state.operationShapes);
 
   const { hideModal } = useModal();
 
@@ -27,84 +32,84 @@ function ExtrudeModal() {
         (activeFunction === "REVOLVE" &&
           !baseCoordinate.hasOwnProperty("y"))) &&
         operationShapes && (
-          <ModalOverlay
-            onClick={() => {
-              hideModal();
-              setActiveFunction(null);
+          <ModalContainer
+            onClick={e => {
+              e.stopPropagation();
             }}
           >
-            <ModalContainer
-              onClick={e => {
-                e.stopPropagation();
+            <CloseButton
+              onClick={() => {
+                hideModal();
+                setActiveFunction(null);
               }}
-            >
-              <CloseButton
+            />
+            <Flex>
+              <OperationSelectButton
                 onClick={() => {
-                  hideModal();
-                  setActiveFunction(null);
+                  setOperationType("SUBTRACT");
                 }}
-              />
-              <div>
-                <SelectButton
-                  onClick={() => {
-                    setOperationType("SUBTRACT");
-                  }}
-                >
-                  {operationType === "SUBTRACT" ? "차집합(활)" : "차집합"}
-                </SelectButton>
-                <SelectButton
-                  onClick={() => {
-                    setOperationType("UNION");
-                  }}
-                >
-                  {operationType === "UNION" ? "합집합(활)" : "합집합"}
-                </SelectButton>
-              </div>
-              {activeFunction === "EXTRUDE" ? "치수" : "반지름"}
-              <SizeInput
-                type="number"
-                onChange={e => {
-                  setExtrudeSize(e.target.value);
+                isActive={operationType === "SUBTRACT"}
+              >
+                <img src={subtractIcon} alt="이미지 없음" width="80" />
+              </OperationSelectButton>
+              <OperationSelectButton
+                onClick={() => {
+                  setOperationType("UNION");
                 }}
-              ></SizeInput>
-              {activeFunction === "EXTRUDE" && (
-                <button
-                  onClick={() => {
-                    setIsForwardDirection();
+                isActive={operationType === "UNION"}
+              >
+                <img src={unionIcon} alt="이미지 없음" width="80" />
+              </OperationSelectButton>
+            </Flex>
+            <form>
+              <Flex>
+                <Field>
+                  {activeFunction === "EXTRUDE" ? "치수" : "반지름"}
+                </Field>
+                <SizeInput
+                  type="number"
+                  defaultValue="0"
+                  min="0"
+                  max="1000"
+                  onChange={e => {
+                    setExtrudeSize(e.target.value / 10);
                   }}
-                >
-                  방향 전환
-                </button>
-              )}
+                ></SizeInput>
+                {activeFunction === "EXTRUDE" && (
+                  <DirectionChangeButton
+                    onClick={() => {
+                      setIsForwardDirection();
+                    }}
+                  >
+                    <img src={directionIcon} alt="이미지 없음" width="40" />
+                  </DirectionChangeButton>
+                )}
+              </Flex>
               <ConfirmButton
+                type="submit"
                 onClick={() => {
                   hideModal();
                   setIsConfirm(true);
                 }}
-              >
-                확인
-              </ConfirmButton>
-            </ModalContainer>
-          </ModalOverlay>
+                value="확인"
+              ></ConfirmButton>
+            </form>
+          </ModalContainer>
         )}
     </>
   );
 }
 
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 900;
+const Flex = styled.div`
+  display: flex;
+  justify-content: center;
 `;
 
 const ModalContainer = styled.div`
   position: fixed;
   top: 330px;
   right: 270px;
-  width: 350px;
+  width: 300px;
   height: 250px;
   text-align: center;
   border: 1px solid #737373;
@@ -115,42 +120,45 @@ const ModalContainer = styled.div`
 
 const CloseButton = styled(IoMdClose)`
   position: absolute;
-  top: 6.57%;
-  left: 90.6%;
+  top: 12px;
+  right: 12px;
   width: 20px;
   height: 20px;
   cursor: pointer;
 `;
 
-const SelectButton = styled.button`
-  width: 82px;
-  height: 30px;
-  border-radius: 4px;
-  margin: 50px auto;
-  border: 1px solid #4a2882;
-  background-color: #ffff;
-  font-size: 15px;
-  color: #4a2882;
-  cursor: pointer;
+const OperationSelectButton = styled(IconButton)`
+  margin: 15px 5px 0px 5px;
+`;
 
-  &:hover {
-    opacity: 0.8;
-  }
+const DirectionChangeButton = styled(IconButton)`
+  margin-top: 20px;
+  margin-left: 5px;
+`;
+
+const Field = styled.p`
+  margin-top: 21px;
+  padding-top: 10px;
+  padding-right: 7px;
+  font-size: 15px;
 `;
 
 const SizeInput = styled.input`
   width: 150px;
-  height: 30px;
-  font-size: 15px;
+  height: 40px;
+  margin-top: 22px;
+  border: 1px solid #737373;
+  border-radius: 7px;
+  font-size: 17px;
 `;
 
-const ConfirmButton = styled.button`
+const ConfirmButton = styled.input`
   display: block;
   width: 82px;
   height: 30px;
   border: 0;
   border-radius: 4px;
-  margin: 50px auto;
+  margin: 25px auto;
   background-color: #4a2882;
   font-size: 15px;
   color: white;
