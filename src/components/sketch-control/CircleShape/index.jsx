@@ -80,7 +80,7 @@ function CircleShape({ setSelectedShapeId }) {
                     100,
                   ]}
                 />
-                <meshBasicMaterial
+                <meshStandardMaterial
                   attach="material"
                   color="red"
                   side={THREE.DoubleSide}
@@ -118,7 +118,7 @@ function CircleShape({ setSelectedShapeId }) {
                 100,
               ]}
             />
-            <meshBasicMaterial
+            <meshStandardMaterial
               attach="material"
               color="red"
               side={THREE.DoubleSide}

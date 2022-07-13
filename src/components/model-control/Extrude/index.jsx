@@ -29,6 +29,7 @@ function Extrude() {
 
   useEffect(() => {
     setExtrudeSettings({
+      curveSegments: 30,
       depth: extrudeSize,
       bevelEnabled: false,
     });
@@ -77,7 +78,7 @@ function Extrude() {
             attach="geometry"
             args={[operationShapes.extrudeShape, extrudeSettings]}
           />
-          <meshBasicMaterial
+          <meshStandardMaterial
             attach="material"
             color={operationType === "UNION" ? "hotpink" : "skyblue"}
             opacity={0.5}

@@ -80,7 +80,7 @@ function LineShape({ setSelectedShapeId }) {
             attach="geometry"
             args={[coordsToShape(manipulateCoords(points, base))]}
           />
-          <meshBasicMaterial
+          <meshStandardMaterial
             attach="material"
             color="red"
             side={THREE.DoubleSide}
@@ -121,7 +121,7 @@ function LineShape({ setSelectedShapeId }) {
               attach="geometry"
               args={[coordsToShape(manipulateCoords(points, base))]}
             />
-            <meshBasicMaterial
+            <meshStandardMaterial
               attach="material"
               color="red"
               side={THREE.DoubleSide}

@@ -93,7 +93,7 @@ function RectShape({ setSelectedShapeId }) {
                   attach="geometry"
                   args={[coordsToShape(manipulateCoords(points, base))]}
                 />
-                <meshBasicMaterial
+                <meshStandardMaterial
                   attach="material"
                   color="red"
                   side={THREE.DoubleSide}
@@ -123,7 +123,7 @@ function RectShape({ setSelectedShapeId }) {
             attach="geometry"
             args={[coordsToShape(manipulateCoords(points, base))]}
           />
-          <meshBasicMaterial
+          <meshStandardMaterial
             attach="material"
             color="red"
             side={THREE.DoubleSide}

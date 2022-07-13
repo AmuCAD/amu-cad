@@ -32,13 +32,13 @@ function VirtualPlane(props) {
 
           switch (props.text) {
             case "XY":
-              setBaseCoordinate({ z: 0 });
+              setBaseCoordinate({ z: 0.0001 });
               break;
             case "XZ":
-              setBaseCoordinate({ y: 0 });
+              setBaseCoordinate({ y: 0.0001 });
               break;
             default:
-              setBaseCoordinate({ x: 0 });
+              setBaseCoordinate({ x: 0.0001 });
           }
         }
       }}
@@ -63,6 +63,7 @@ function VirtualPlane(props) {
         opacity={0.5}
         side={THREE.DoubleSide}
         transparent
+        depthWrite={false}
       />
     </Plane>
   );

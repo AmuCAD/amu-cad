@@ -81,13 +81,13 @@ function Revolve() {
               args={[
                 operationShapes.revolveShape,
                 {
+                  steps: 50,
                   bevelEnabled: false,
                   extrudePath: extrudePath,
-                  steps: 50,
                 },
               ]}
             />
-            <meshBasicMaterial
+            <meshStandardMaterial
               attach="material"
               color={operationType === "UNION" ? "hotpink" : "skyblue"}
               side={THREE.DoubleSide}

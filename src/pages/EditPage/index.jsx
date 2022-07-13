@@ -24,7 +24,7 @@ function EditPage() {
       >
         <OrbitControls />
         <ambientLight intensity={1} />
-        <pointLight position={[15, 20, 10]} intensity={2} color="#fff" />
+        <pointLight position={[10, 10, 10]} intensity={1} />
         {isSketchMode && baseCoordinate && (
           <CameraDolly baseCoordinate={baseCoordinate} />
         )}

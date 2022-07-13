@@ -108,7 +108,12 @@ function Model() {
     for (const prop in prevPoint) {
       if (!prevPoint.hasOwnProperty(prop)) continue;
       if (prevPoint[prop] === currentPoint[prop]) {
-        return { [prop]: prevPoint[prop] };
+        return {
+          [prop]:
+            prevPoint[prop] > 0
+              ? Math.ceil(prevPoint[prop] * 1000) / 1000
+              : Math.floor(prevPoint[prop] * 1000) / 1000,
+        };
       }
     }
 
@@ -146,9 +151,11 @@ function Model() {
           }}
           object={models[models.length - 1]}
           material={
-            new THREE.MeshBasicMaterial({
-              color: "white",
+            new THREE.MeshStandardMaterial({
+              color: "lightgrey",
+              opacity: isSketchMode && baseCoordinate ? "0.3" : "1",
               side: THREE.DoubleSide,
+              transparent: true,
             })
           }
         />
