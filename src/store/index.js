@@ -22,6 +22,8 @@ const useStore = create(
     setIsConfirm: boolean => set(() => ({ isConfirm: boolean })),
     operationType: "UNION",
     setOperationType: type => set(() => ({ operationType: type })),
+    shapes: [],
+    setShapes: shapes => set(() => ({ shapes: shapes })),
     models: [],
     setModels: models => set(() => ({ models: models })),
     blobUrl: null,

@@ -51,7 +51,7 @@ function ModelController() {
       >
         {activeFunction === "REVOLVE" ? "회전(활)" : "회전"}
       </button>
-      <Undo />
+      <Undo isModel={true} />
       <Importer />
       <Exporter format={"gltf"} />
       <Exporter format={"stl"} />

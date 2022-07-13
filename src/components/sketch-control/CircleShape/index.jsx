@@ -10,10 +10,14 @@ import getDistance from "../../../utils/getDistance";
 import manipulateCoords from "../../../utils/manipulateCoords";
 import getCircleShape from "../../../utils/getCircleShape";
 
-function CircleShape({ shapes, setShapes, setSelectedShapeId }) {
+function CircleShape({ setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
+  ]);
+  const [shapes, setShapes] = useStore(state => [
+    state.shapes,
+    state.setShapes,
   ]);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const setOperationShapes = useStore(state => state.setOperationShapes);

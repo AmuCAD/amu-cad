@@ -11,10 +11,14 @@ import coordsToShape from "../../../utils/coordsToShape";
 import rotateCoord from "../../../utils/rotateCoord";
 import getMeshCenter from "../../../utils/getMeshCenter";
 
-function LineShape({ shapes, setShapes, setSelectedShapeId }) {
+function LineShape({ setSelectedShapeId }) {
   const [baseCoordinate, setBaseCoordinate] = useStore(state => [
     state.baseCoordinate,
     state.setBaseCoordinate,
+  ]);
+  const [shapes, setShapes] = useStore(state => [
+    state.shapes,
+    state.setShapes,
   ]);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const setOperationShapes = useStore(state => state.setOperationShapes);
