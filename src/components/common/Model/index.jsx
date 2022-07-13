@@ -12,7 +12,10 @@ function Model() {
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
-  const [model, setModel] = useStore(state => [state.model, state.setModel]);
+  const [models, setModels] = useStore(state => [
+    state.models,
+    state.setModels,
+  ]);
   const activeFunction = useStore(state => state.activeFunction);
   const isSketchMode = useStore(state => state.isSketchMode);
   const importFile = useStore(state => state.importFile);
@@ -30,7 +33,7 @@ function Model() {
       );
 
       gltfLoader.load(blobUrl, gltf => {
-        setModel(gltf.scene.children[0]);
+        setModels([...models, gltf.scene.children[0]]);
       });
     }
   }, [importFile]);
@@ -119,7 +122,7 @@ function Model() {
       {isSketchMode && !baseCoordinate && mouse && (
         <SelectionHelper mouse={mouse} angle={angle} />
       )}
-      {model && (
+      {models[0] && (
         <primitive
           onPointerMove={e => {
             if (isSketchMode && !baseCoordinate) {
@@ -141,7 +144,7 @@ function Model() {
               setBaseCoordinate(sameCoordinate);
             }
           }}
-          object={model}
+          object={models[models.length - 1]}
           material={
             new THREE.MeshBasicMaterial({
               color: "white",

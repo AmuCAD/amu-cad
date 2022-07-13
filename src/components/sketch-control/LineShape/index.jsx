@@ -16,7 +16,7 @@ function LineShape({ shapes, setShapes, setSelectedShapeId }) {
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
-  const setActiveFunction = useStore(state => state.activeFunction);
+  const setActiveFunction = useStore(state => state.setActiveFunction);
   const setOperationShapes = useStore(state => state.setOperationShapes);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);

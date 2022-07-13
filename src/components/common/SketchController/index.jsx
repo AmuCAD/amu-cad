@@ -1,5 +1,5 @@
-import UndoButton from "../UndoButton";
 import useStore from "../../../store";
+import Undo from "../../model-control/Undo";
 
 function SketchController() {
   const setIsSketchMode = useStore(state => state.setIsSketchMode);
@@ -47,7 +47,7 @@ function SketchController() {
       >
         {activeFunction === "DELETE" ? "스케치 삭제(활)" : "스케치 삭제"}
       </button>
-      <UndoButton />
+      <Undo />
       <button
         onClick={() => {
           setIsSketchMode(false);

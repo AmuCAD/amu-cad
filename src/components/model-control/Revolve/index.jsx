@@ -14,7 +14,10 @@ function Revolve() {
     state.isConfirm,
     state.setIsConfirm,
   ]);
-  const [model, setModel] = useStore(state => [state.model, state.setModel]);
+  const [models, setModels] = useStore(state => [
+    state.models,
+    state.setModels,
+  ]);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
@@ -27,16 +30,16 @@ function Revolve() {
   useEffect(() => {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
-      const modelMesh = model?.clone();
+      const modelMesh = models ? models[models.length - 1].clone() : null;
 
       if (modelMesh && operationType === "UNION") {
         const result = CSG.union(modelMesh, extrudeMesh);
-        setModel(result);
+        setModels([...models, result]);
       } else if (modelMesh && operationType === "SUBTRACT") {
         const result = CSG.subtract(modelMesh, extrudeMesh);
-        setModel(result);
+        setModels([...models, result]);
       } else {
-        setModel(extrudeMesh);
+        setModels([extrudeMesh]);
       }
 
       setActiveFunction(null);

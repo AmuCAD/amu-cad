@@ -1,7 +1,7 @@
-import UndoButton from "../UndoButton";
-import Import from "../../model-control/Import";
-import Exporter from "../../model-control/Exporter";
 import useStore from "../../../store";
+import Importer from "../../model-control/Importer";
+import Exporter from "../../model-control/Exporter";
+import Undo from "../../model-control/Undo";
 
 function ModelController() {
   const [isSketchMode, setIsSketchMode] = useStore(state => [
@@ -51,8 +51,8 @@ function ModelController() {
       >
         {activeFunction === "REVOLVE" ? "회전(활)" : "회전"}
       </button>
-      <UndoButton />
-      <Import />
+      <Undo />
+      <Importer />
       <Exporter format={"gltf"} />
       <Exporter format={"stl"} />
     </>

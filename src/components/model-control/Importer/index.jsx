@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import useStore from "../../../store";
 
-function Import() {
+function Importer() {
   const setImportFile = useStore(state => state.setImportFile);
   const ref = useRef(null);
 
@@ -22,4 +22,4 @@ function Import() {
   );
 }
 
-export default Import;
+export default Importer;
