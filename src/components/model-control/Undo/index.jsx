@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import useStore from "../../../store";
 
 function Undo({ isModel }) {
@@ -10,7 +11,30 @@ function Undo({ isModel }) {
     state.setModels,
   ]);
 
-  const handleClick = () => {
+  useEffect(() => {
+    if (models.length === 6) {
+      const targetList = models.slice();
+
+      targetList.shift();
+      setModels(targetList);
+    }
+
+    if (shapes.length === 16) {
+      const targetList = shapes.slice();
+
+      targetList.shift();
+      setShapes(targetList);
+    }
+  }, [models, shapes]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
+  const deleteLatestObject = () => {
     if (isModel) {
       const targetList = models.slice();
 
@@ -24,7 +48,13 @@ function Undo({ isModel }) {
     }
   };
 
-  return <button onClick={handleClick}>되돌리기</button>;
+  const handleKeyDown = e => {
+    if (e.key === "z" && (e.ctrlKey || e.metaKey)) {
+      deleteLatestObject();
+    }
+  };
+
+  return <button onClick={deleteLatestObject}>되돌리기</button>;
 }
 
 export default Undo;
