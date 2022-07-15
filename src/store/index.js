@@ -13,7 +13,7 @@ const useStore = create(
       set(() => ({ activeFunction: functionName })),
     isOriginPlanesOn: true,
     setIsOriginPlanesOn: boolean => set(() => ({ isOriginPlanesOn: boolean })),
-    activeModal: {},
+    activeModal: { type: "GUIDE" },
     setActiveModal: ({ type, props }) =>
       set(() => ({ activeModal: { type, props } })),
     operationShapes: null,

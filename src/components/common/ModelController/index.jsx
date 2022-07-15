@@ -4,12 +4,6 @@ import Importer from "../../model-control/Importer";
 import Exporter from "../../model-control/Exporter";
 import Undo from "../../model-control/Undo";
 import IconButton from "../../common/shared/IconButton";
-import IconImg from "../shared/IconImg";
-
-import sketchIcon from "../../../assets/icons/sketch.png";
-import extrudeIcon from "../../../assets/icons/extrude.png";
-import revolveIcon from "../../../assets/icons/revolve.png";
-import originIcon from "../../../assets/icons/origin.png";
 
 function ModelController() {
   const [isSketchMode, setIsSketchMode] = useStore(state => [
@@ -51,7 +45,7 @@ function ModelController() {
         }}
         isActive={isSketchMode}
       >
-        <IconImg src={sketchIcon} alt="이미지 없음" />
+        <img src="/images/icons/sketch.png" alt="이미지 없음" width="40px" />
       </IconButton>
       <IconButton
         onClick={() => {
@@ -73,7 +67,7 @@ function ModelController() {
         }}
         isActive={activeFunction === "EXTRUDE"}
       >
-        <IconImg src={extrudeIcon} alt="이미지 없음" />
+        <img src="/images/icons/extrude.png" alt="이미지 없음" width="40px" />
       </IconButton>
       <IconButton
         onClick={() => {
@@ -95,7 +89,7 @@ function ModelController() {
         }}
         isActive={activeFunction === "REVOLVE"}
       >
-        <IconImg src={revolveIcon} alt="이미지 없음" />
+        <img src="/images/icons/revolve.png" alt="이미지 없음" width="40px" />
       </IconButton>
       <Undo isModel={true} />
       <IconButton
@@ -106,7 +100,7 @@ function ModelController() {
         }}
         isActive={isOriginPlanesOn}
       >
-        <IconImg src={originIcon} alt="이미지 없음" />
+        <img src="/images/icons/origin.png" alt="이미지 없음" width="40px" />
       </IconButton>
       <Importer />
       <Exporter format={"gltf"} />

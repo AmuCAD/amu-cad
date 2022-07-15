@@ -3,9 +3,6 @@ import { useRef } from "react";
 import useStore from "../../../store";
 import useModal from "../../../hooks/useModal";
 import IconButton from "../../common/shared/IconButton";
-import IconImg from "../../common/shared/IconImg";
-
-import importIcon from "../../../assets/icons/import.png";
 
 function Importer() {
   const setImportFile = useStore(state => state.setImportFile);
@@ -17,7 +14,12 @@ function Importer() {
     <>
       <IconButton isActive={false}>
         <label htmlFor="input-file">
-          <IconImg src={importIcon} alt="이미지 없음" />
+          <img
+            src="/images/icons/import.png"
+            alt="이미지 없음"
+            width="40px"
+            style={{ cursor: "pointer" }}
+          />
         </label>
         <input
           type="file"

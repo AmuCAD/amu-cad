@@ -5,10 +5,6 @@ import useModal from "../../../hooks/useModal";
 import useStore from "../../../store";
 import IconButton from "../../common/shared/IconButton";
 
-import unionIcon from "../../../assets/icons/union.png";
-import subtractIcon from "../../../assets/icons/subtract.png";
-import directionIcon from "../../../assets/icons/direction.png";
-
 function ExtrudeModal() {
   const [activeFunction, setActiveFunction] = useStore(state => [
     state.activeFunction,
@@ -50,7 +46,7 @@ function ExtrudeModal() {
                 }}
                 isActive={operationType === "SUBTRACT"}
               >
-                <img src={subtractIcon} alt="이미지 없음" width="80" />
+                <img src="/images/icons/subtract.png" alt="이미지 없음" width="80" />
               </OperationSelectButton>
               <OperationSelectButton
                 onClick={() => {
@@ -58,7 +54,7 @@ function ExtrudeModal() {
                 }}
                 isActive={operationType === "UNION"}
               >
-                <img src={unionIcon} alt="이미지 없음" width="80" />
+                <img src="/images/icons/union.png" alt="이미지 없음" width="80" />
               </OperationSelectButton>
             </Flex>
             <form>
@@ -82,7 +78,7 @@ function ExtrudeModal() {
                       setIsForwardDirection();
                     }}
                   >
-                    <img src={directionIcon} alt="이미지 없음" width="40" />
+                    <img src="/images/icons/direction.png" alt="이미지 없음" width="40" />
                   </DirectionChangeButton>
                 )}
               </Flex>

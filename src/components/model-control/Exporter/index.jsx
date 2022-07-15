@@ -5,10 +5,6 @@ import useModal from "../../../hooks/useModal";
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
 import { STLExporter } from "three/examples/jsm/exporters/STLExporter";
 import IconButton from "../../common/shared/IconButton";
-import IconImg from "../../common/shared/IconImg";
-
-import saveIcon from "../../../assets/icons/save.png";
-import stlIcon from "../../../assets/icons/stl.png";
 
 function Exporter({ format }) {
   const models = useStore(state => state.models);
@@ -80,7 +76,11 @@ function Exporter({ format }) {
       }}
       isActive={false}
     >
-      <IconImg src={format === "gltf" ? saveIcon : stlIcon} alt="이미지 없음" />
+      <img
+        src={format === "gltf" ? "/images/icons/save.png" : "/images/icons/stl.png"}
+        alt="이미지 없음"
+        width="40px"
+      />
     </IconButton>
   );
 }

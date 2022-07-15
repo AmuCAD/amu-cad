@@ -4,9 +4,6 @@ import useStore from "../../../store";
 import useModal from "../../../hooks/useModal";
 import ModelController from "../ModelController";
 import SketchController from "../SketchController";
-import IconImg from "../shared/IconImg";
-
-import helpIcon from "../../../assets/icons/help.png";
 
 function ControlPanel() {
   const isSketchMode = useStore(state => state.isSketchMode);
@@ -16,9 +13,7 @@ function ControlPanel() {
 
   return (
     <>
-      <Container
-        halfSize={isSketchMode && baseCoordinate ? "-160px" : "-208px"}
-      >
+      <Container>
         {isSketchMode && baseCoordinate ? (
           <SketchController />
         ) : (
@@ -27,11 +22,11 @@ function ControlPanel() {
       </Container>
       <HelpButton
         onClick={() => {
-          showModal({ type: "HELP" });
+          showModal({ type: "GUIDE" });
         }}
         isActive={false}
       >
-        <IconImg src={helpIcon} alt="이미지 없음" />
+        <img src="/images/icons/help.png" alt="이미지 없음" width="40px" />
       </HelpButton>
     </>
   );
@@ -41,7 +36,7 @@ const Container = styled.div`
   position: absolute;
   left: 50%;
   margin-top: 10px;
-  margin-left: ${props => props.halfSize};
+  transform: translate(-50%, 0);
   z-index: 999;
 `;
 

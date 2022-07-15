@@ -1,0 +1,98 @@
+[
+  {
+    "id": 0,
+    "category": "기본 조작",
+    "img": "/images/icons/mouse_left.png",
+    "description": "작업물 회전"
+  },
+  {
+    "id": 1,
+    "category": "기본 조작",
+    "img": "/images/icons/mouse_scroll.png",
+    "description": "확대 / 축소"
+  },
+  {
+    "id": 2,
+    "category": "기본 조작",
+    "img": "/images/icons/mouse_right.png",
+    "description": "작업물 이동"
+  },
+  {
+    "id": 3,
+    "category": "기본 조작",
+    "img": "/images/icons/undo.png",
+    "description": "되돌리기"
+  },
+  {
+    "id": 4,
+    "category": "Model",
+    "img": "/images/icons/sketch.png",
+    "description": "스케치 시작"
+  },
+  {
+    "id": 5,
+    "category": "Model",
+    "img": "/images/icons/extrude.png",
+    "description": "돌출"
+  },
+  {
+    "id": 6,
+    "category": "Model",
+    "img": "/images/icons/revolve.png",
+    "description": "회전 돌출"
+  },
+  {
+    "id": 7,
+    "category": "Model",
+    "img": "/images/icons/origin.png",
+    "description": "좌표 평면 표시"
+  },
+  {
+    "id": 8,
+    "category": "Model",
+    "img": "/images/icons/import.png",
+    "description": "불러오기"
+  },
+  {
+    "id": 9,
+    "category": "Model",
+    "img": "/images/icons/save.png",
+    "description": "glTF 형식으로 저장"
+  },
+  {
+    "id": 10,
+    "category": "Model",
+    "img": "/images/icons/stl.png",
+    "description": "STL 형식으로 저장"
+  },
+  {
+    "id": 11,
+    "category": "Sketch",
+    "img": "/images/icons/line.png",
+    "description": "선 스케치"
+  },
+  {
+    "id": 12,
+    "category": "Sketch",
+    "img": "/images/icons/circle.png",
+    "description": "원 스케치"
+  },
+  {
+    "id": 13,
+    "category": "Sketch",
+    "img": "/images/icons/rectangle.png",
+    "description": "직사각형 스케치"
+  },
+  {
+    "id": 14,
+    "category": "Sketch",
+    "img": "/images/icons/delete.png",
+    "description": "스케치 삭제"
+  },
+  {
+    "id": 15,
+    "category": "Sketch",
+    "img": "/images/icons/exit.png",
+    "description": "스케치 종료"
+  }
+]

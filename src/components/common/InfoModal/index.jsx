@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 import useModal from "../../../hooks/useModal";
 
 function InfoModal({ children }) {
@@ -22,7 +21,7 @@ const ModalContainer = styled.div`
   bottom: 50px;
   left: 30px;
   padding: 30px;
-  border-radius: 15px;
+  border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0px 0px 3px;
   z-index: 1000;
