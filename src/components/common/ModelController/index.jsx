@@ -19,7 +19,7 @@ function ModelController() {
     state.setIsOriginPlanesOn,
   ]);
   const setBaseCoordinate = useStore(state => state.setBaseCoordinate);
-  const setOperationShapes = useStore(state => state.setOperationShapes);
+  const setOperationData = useStore(state => state.setOperationData);
 
   const { showModal, hideModal } = useModal();
 
@@ -62,7 +62,7 @@ function ModelController() {
             });
           }
 
-          setOperationShapes(null);
+          setOperationData(null);
           setIsSketchMode(false);
         }}
         isActive={activeFunction === "EXTRUDE"}
@@ -83,7 +83,7 @@ function ModelController() {
               },
             });
 
-            setOperationShapes(null);
+            setOperationData(null);
             setIsSketchMode(false);
           }
         }}

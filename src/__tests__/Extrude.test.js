@@ -20,7 +20,7 @@ it("renders extrude mesh", async () => {
 
   act(() => {
     result.current.setBaseCoordinate({ z: 0 });
-    result.current.setOperationShapes({ extrudeShape: extrudeShape });
+    result.current.setOperationData({ extrudeShape: extrudeShape });
   });
 
   expect(renderer.scene.children.length).toBe(1);

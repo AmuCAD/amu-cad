@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import * as THREE from "three";
-import { CSG } from "three-csg-ts";
 
 import useStore from "../../../store";
+import useModel from "../../../hooks/useModel";
+import getRevolvePosition from "../../../utils/getRevolvePosition";
 import createCirclePath from "../../../utils/createCirclePath";
 
 function Revolve() {
@@ -18,10 +19,6 @@ function Revolve() {
     state.isConfirm,
     state.setIsConfirm,
   ]);
-  const [models, setModels] = useStore(state => [
-    state.models,
-    state.setModels,
-  ]);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
@@ -30,20 +27,13 @@ function Revolve() {
 
   const ref = useRef(null);
 
+  const { updateModel } = useModel();
+
   useEffect(() => {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
-      const modelMesh = models[0] ? models[models.length - 1].clone() : null;
 
-      if (modelMesh && operationType === "UNION") {
-        const result = CSG.union(modelMesh, extrudeMesh);
-        setModels([...models, result]);
-      } else if (modelMesh && operationType === "SUBTRACT") {
-        const result = CSG.subtract(modelMesh, extrudeMesh);
-        setModels([...models, result]);
-      } else if (operationType === "UNION") {
-        setModels([extrudeMesh]);
-      }
+      updateModel(extrudeMesh);
 
       setActiveFunction(null);
       setOperationData(null);
@@ -57,17 +47,7 @@ function Revolve() {
       const base = Object.keys(baseCoordinate)[0];
 
       if (base !== "y") {
-        const [x, y, z] = operationData.offset;
-        const isCircleShape = operationData.revolveShape.curves.length === 1;
-
-        if (base === "z") {
-          setPosition([x - radius, y, z]);
-        } else if (isCircleShape) {
-          setPosition([x, y, z - radius]);
-        } else {
-          setPosition([x, y, -radius]);
-        }
-
+        setPosition(getRevolvePosition(operationData, base, radius));
         setExtrudePath(createCirclePath(radius));
       } else {
         setOperationData(null);

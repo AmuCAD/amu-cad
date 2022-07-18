@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import * as THREE from "three";
-import { CSG } from "three-csg-ts";
 
 import useStore from "../../../store";
+import useModel from "../../../hooks/useModel";
 import getPosition from "../../../utils/getPosition";
 
 function Extrude() {
@@ -18,10 +18,6 @@ function Extrude() {
     state.isConfirm,
     state.setIsConfirm,
   ]);
-  const [models, setModels] = useStore(state => [
-    state.models,
-    state.setModels,
-  ]);
   const isForwardDirection = useStore(state => state.isForwardDirection);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setActiveFunction = useStore(state => state.setActiveFunction);
@@ -29,6 +25,8 @@ function Extrude() {
   const [extrudeSettings, setExtrudeSettings] = useState({});
 
   const ref = useRef(null);
+
+  const { updateModel } = useModel();
 
   useEffect(() => {
     setExtrudeSettings({
@@ -41,17 +39,8 @@ function Extrude() {
   useEffect(() => {
     if (isConfirm) {
       const extrudeMesh = ref.current.clone();
-      const modelMesh = models[0] ? models[models.length - 1].clone() : null;
 
-      if (modelMesh && operationType === "UNION") {
-        const result = CSG.union(modelMesh, extrudeMesh);
-        setModels([...models, result]);
-      } else if (modelMesh && operationType === "SUBTRACT") {
-        const result = CSG.subtract(modelMesh, extrudeMesh);
-        setModels([...models, result]);
-      } else if (operationType === "UNION") {
-        setModels([extrudeMesh]);
-      }
+      updateModel(extrudeMesh);
 
       setActiveFunction(null);
       setOperationData(null);
