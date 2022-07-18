@@ -5,10 +5,11 @@ import { nanoid } from "nanoid";
 
 import useStore from "../../../store";
 import useModal from "../../../hooks/useModal";
+import useShape from "../../../hooks/useShape";
 import getPosition from "../../../utils/getPosition";
 import manipulateCoords from "../../../utils/manipulateCoords";
 import coordsToShape from "../../../utils/coordsToShape";
-import rotateCoord from "../../../utils/rotateCoord";
+import rotateCoords from "../../../utils/rotateCoords";
 import getMeshCenter from "../../../utils/getMeshCenter";
 
 function LineShape({ setSelectedShapeId }) {
@@ -16,16 +17,12 @@ function LineShape({ setSelectedShapeId }) {
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
-  const [shapes, setShapes] = useStore(state => [
-    state.shapes,
-    state.setShapes,
-  ]);
-  const setActiveFunction = useStore(state => state.setActiveFunction);
-  const setOperationShapes = useStore(state => state.setOperationShapes);
+  const setOperationData = useStore(state => state.setOperationData);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
 
   const { showModal } = useModal();
+  const { addShape } = useShape();
 
   const [base, offset] = baseCoordinate
     ? Object.entries(baseCoordinate)[0]
@@ -47,29 +44,27 @@ function LineShape({ setSelectedShapeId }) {
       const id = nanoid();
 
       const handleShapeClick = e => {
-        const offset = Object.values(getMeshCenter(e.eventObject));
+        const offset = getMeshCenter(e.eventObject);
         const manipulatedCoords = manipulateCoords(points, base);
-        const rotatedCoords = [];
+        const rotatedCoords = rotateCoords(
+          offset,
+          manipulatedCoords,
+          Math.PI / 2,
+        );
 
-        for (let i = 0; i < manipulatedCoords.length; i++) {
-          rotatedCoords.push([
-            ...rotateCoord(offset, manipulatedCoords[i], Math.PI / 2),
-            manipulatedCoords[i][2],
-          ]);
-        }
-
-        setSelectedShapeId(id);
-        setOperationShapes({
+        const operationData = {
           extrudeShape: coordsToShape(manipulateCoords(points, base)),
           revolveShape: coordsToShape(rotatedCoords, offset),
           offset: offset,
-        });
+        };
+
+        setOperationData(operationData);
+        setSelectedShapeId(id);
         showModal({ type: "EXTRUDE" });
         setBaseCoordinate(baseCoordinate);
       };
 
-      setShapes([
-        ...shapes,
+      addShape(
         <mesh
           key={id}
           position={position}
@@ -86,10 +81,9 @@ function LineShape({ setSelectedShapeId }) {
             side={THREE.DoubleSide}
           />
         </mesh>,
-      ]);
+      );
       setMouse({});
       setPoints([]);
-      setActiveFunction(null);
     }
   };
 
@@ -98,10 +92,10 @@ function LineShape({ setSelectedShapeId }) {
       <Plane
         args={[100, 100]}
         onPointerMove={e => {
-          setMouse(e.point);
+          setMouse(Object.values(e.point));
         }}
         onClick={e => {
-          setPoints([...points, Object.values(e.point)]);
+          setPoints([...points, mouse]);
         }}
         position={position}
         rotation={rotation}
@@ -115,7 +109,7 @@ function LineShape({ setSelectedShapeId }) {
       </Plane>
       {points[0] && (
         <>
-          <Line points={[...points, Object.values(mouse)]} color="black" />
+          <Line points={[...points, mouse]} color="black" />
           <mesh position={position} rotation={rotation}>
             <shapeBufferGeometry
               attach="geometry"

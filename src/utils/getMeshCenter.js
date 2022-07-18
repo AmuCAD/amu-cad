@@ -6,7 +6,7 @@ const getMeshCenter = mesh => {
 
   box3.getCenter(vector);
 
-  return vector;
+  return Object.values(vector);
 };
 
 export default getMeshCenter;

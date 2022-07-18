@@ -16,8 +16,8 @@ const useStore = create(
     activeModal: { type: "GUIDE" },
     setActiveModal: ({ type, props }) =>
       set(() => ({ activeModal: { type, props } })),
-    operationShapes: null,
-    setOperationShapes: shapes => set(() => ({ operationShapes: shapes })),
+    operationData: null,
+    setOperationData: data => set(() => ({ operationData: data })),
     extrudeSize: 0,
     setExtrudeSize: size => set(() => ({ extrudeSize: size })),
     isConfirm: false,

@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 
 import useStore from "../../../store";
 import useModal from "../../../hooks/useModal";
+import useShape from "../../../hooks/useShape";
 import getPosition from "../../../utils/getPosition";
 import getDistance from "../../../utils/getDistance";
 import manipulateCoords from "../../../utils/manipulateCoords";
@@ -15,16 +16,12 @@ function CircleShape({ setSelectedShapeId }) {
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
-  const [shapes, setShapes] = useStore(state => [
-    state.shapes,
-    state.setShapes,
-  ]);
-  const setActiveFunction = useStore(state => state.setActiveFunction);
-  const setOperationShapes = useStore(state => state.setOperationShapes);
+  const setOperationData = useStore(state => state.setOperationData);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
 
   const { showModal } = useModal();
+  const { addShape } = useShape();
 
   const [base, offset] = baseCoordinate
     ? Object.entries(baseCoordinate)[0]
@@ -46,8 +43,7 @@ function CircleShape({ setSelectedShapeId }) {
             const id = nanoid();
 
             const handleShapeClick = () => {
-              setSelectedShapeId(id);
-              setOperationShapes({
+              const operationData = {
                 extrudeShape: getCircleShape(
                   manipulateCoords(points, base),
                   getDistance(points[0], Object.values(mouse)),
@@ -57,13 +53,15 @@ function CircleShape({ setSelectedShapeId }) {
                   getDistance(points[0], Object.values(mouse)),
                 ),
                 offset: points[0],
-              });
+              };
+
+              setOperationData(operationData);
+              setSelectedShapeId(id);
               showModal({ type: "EXTRUDE" });
               setBaseCoordinate(baseCoordinate);
             };
 
-            setShapes([
-              ...shapes,
+            addShape(
               <mesh
                 key={id}
                 position={position}
@@ -86,10 +84,9 @@ function CircleShape({ setSelectedShapeId }) {
                   side={THREE.DoubleSide}
                 />
               </mesh>,
-            ]);
+            );
             setMouse({});
             setPoints([]);
-            setActiveFunction(null);
           } else {
             setPoints([Object.values(e.point)]);
           }

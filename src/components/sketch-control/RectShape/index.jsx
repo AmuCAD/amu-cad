@@ -5,10 +5,11 @@ import { nanoid } from "nanoid";
 
 import useStore from "../../../store";
 import useModal from "../../../hooks/useModal";
+import useShape from "../../../hooks/useShape";
 import getPosition from "../../../utils/getPosition";
 import manipulateCoords from "../../../utils/manipulateCoords";
 import coordsToShape from "../../../utils/coordsToShape";
-import rotateCoord from "../../../utils/rotateCoord";
+import rotateCoords from "../../../utils/rotateCoords";
 import getMeshCenter from "../../../utils/getMeshCenter";
 
 function RectShape({ setSelectedShapeId }) {
@@ -16,16 +17,12 @@ function RectShape({ setSelectedShapeId }) {
     state.baseCoordinate,
     state.setBaseCoordinate,
   ]);
-  const [shapes, setShapes] = useStore(state => [
-    state.shapes,
-    state.setShapes,
-  ]);
-  const setActiveFunction = useStore(state => state.setActiveFunction);
-  const setOperationShapes = useStore(state => state.setOperationShapes);
+  const setOperationData = useStore(state => state.setOperationData);
   const [mouse, setMouse] = useState({});
   const [points, setPoints] = useState([]);
 
   const { showModal } = useModal();
+  const { addShape } = useShape();
 
   const [base, offset] = baseCoordinate
     ? Object.entries(baseCoordinate)[0]
@@ -59,30 +56,28 @@ function RectShape({ setSelectedShapeId }) {
           const id = nanoid();
 
           const handleShapeClick = e => {
-            const offset = Object.values(getMeshCenter(e.eventObject));
+            const offset = getMeshCenter(e.eventObject);
             const manipulatedCoords = manipulateCoords(points, base);
-            const rotatedCoords = [];
+            const rotatedCoords = rotateCoords(
+              offset,
+              manipulatedCoords,
+              Math.PI / 2,
+            );
 
-            for (let i = 0; i < manipulatedCoords.length; i++) {
-              rotatedCoords.push([
-                ...rotateCoord(offset, manipulatedCoords[i], Math.PI / 2),
-                manipulatedCoords[i][2],
-              ]);
-            }
-
-            setSelectedShapeId(id);
-            setOperationShapes({
+            const operationData = {
               extrudeShape: coordsToShape(manipulateCoords(points, base)),
               revolveShape: coordsToShape(rotatedCoords, offset),
               offset: offset,
-            });
+            };
+
+            setOperationData(operationData);
+            setSelectedShapeId(id);
             showModal({ type: "EXTRUDE" });
             setBaseCoordinate(baseCoordinate);
           };
 
           if (points[0]) {
-            setShapes([
-              ...shapes,
+            addShape(
               <mesh
                 key={id}
                 position={position}
@@ -99,10 +94,9 @@ function RectShape({ setSelectedShapeId }) {
                   side={THREE.DoubleSide}
                 />
               </mesh>,
-            ]);
+            );
             setMouse({});
             setPoints([]);
-            setActiveFunction(null);
           } else {
             setPoints([Object.values(e.point)]);
           }

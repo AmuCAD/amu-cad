@@ -18,7 +18,7 @@ function ExtrudeModal() {
   const setIsForwardDirection = useStore(state => state.setIsForwardDirection);
   const baseCoordinate = useStore(state => state.baseCoordinate);
   const setIsConfirm = useStore(state => state.setIsConfirm);
-  const operationShapes = useStore(state => state.operationShapes);
+  const operationData = useStore(state => state.operationData);
 
   const { hideModal } = useModal();
 
@@ -27,7 +27,7 @@ function ExtrudeModal() {
       {(activeFunction === "EXTRUDE" ||
         (activeFunction === "REVOLVE" &&
           !baseCoordinate.hasOwnProperty("y"))) &&
-        operationShapes && (
+          operationData && (
           <ModalContainer
             onClick={e => {
               e.stopPropagation();

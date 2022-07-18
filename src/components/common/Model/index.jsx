@@ -99,6 +99,7 @@ function Model() {
             Math.atan2(mouse.x - prevPoint.x, mouse.z - prevPoint.z) * 100,
           ) / 100,
         );
+
         return data;
       });
     }

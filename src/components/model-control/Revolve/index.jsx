@@ -6,9 +6,9 @@ import useStore from "../../../store";
 import createCirclePath from "../../../utils/createCirclePath";
 
 function Revolve() {
-  const [operationShapes, setOperationShapes] = useStore(state => [
-    state.operationShapes,
-    state.setOperationShapes,
+  const [operationData, setOperationData] = useStore(state => [
+    state.operationData,
+    state.setOperationData,
   ]);
   const [radius, setRadius] = useStore(state => [
     state.extrudeSize,
@@ -46,19 +46,19 @@ function Revolve() {
       }
 
       setActiveFunction(null);
-      setOperationShapes(null);
+      setOperationData(null);
       setIsConfirm(false);
       setRadius(0);
     }
   }, [isConfirm]);
 
   useEffect(() => {
-    if (operationShapes && baseCoordinate) {
+    if (operationData && baseCoordinate) {
       const base = Object.keys(baseCoordinate)[0];
 
       if (base !== "y") {
-        const [x, y, z] = operationShapes.offset;
-        const isCircleShape = operationShapes.revolveShape.curves.length === 1;
+        const [x, y, z] = operationData.offset;
+        const isCircleShape = operationData.revolveShape.curves.length === 1;
 
         if (base === "z") {
           setPosition([x - radius, y, z]);
@@ -70,20 +70,20 @@ function Revolve() {
 
         setExtrudePath(createCirclePath(radius));
       } else {
-        setOperationShapes(null);
+        setOperationData(null);
       }
     }
-  }, [radius, operationShapes, baseCoordinate]);
+  }, [radius, operationData, baseCoordinate]);
 
   return (
     <>
-      {operationShapes && (
+      {operationData && (
         <>
           <mesh ref={ref} position={position} rotation={[Math.PI / 2, 0, 0]}>
             <extrudeGeometry
               attach="geometry"
               args={[
-                operationShapes.revolveShape,
+                operationData.revolveShape,
                 {
                   steps: 50,
                   bevelEnabled: false,
