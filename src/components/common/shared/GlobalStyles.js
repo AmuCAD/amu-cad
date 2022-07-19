@@ -10,7 +10,7 @@ const GlobalStyles = createGlobalStyle`
   }
   body {
     margin: 0;
-    font-family: sans-serif;
+    font-family: "sans-serif";
     font-size: 14px;
     background-color: #ffffff;
   }

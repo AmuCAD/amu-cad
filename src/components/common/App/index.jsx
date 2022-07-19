@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import EditPage from "../../../pages/EditPage";
 import HomePage from "../../../pages/HomePage";
 import AppHeader from "../AppHeader";
-import GlobalStyles from "../GlobalStyles";
+import GlobalStyles from "../shared/GlobalStyles";
 
 function App() {
   return (

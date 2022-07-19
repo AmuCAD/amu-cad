@@ -5,11 +5,18 @@ function AppHeader() {
   return (
     <Header>
       <Link to={"/"}>
-        <Logo>AmuCAD</Logo>
+        <Flex>
+          <Logo src="/images/icons/logo.png" alt="이미지 없음" />
+          <Brand>AMUCAD</Brand>
+        </Flex>
       </Link>
     </Header>
   );
 }
+
+const Flex = styled.div`
+  display: flex;
+`;
 
 const Header = styled.div`
   top: 0;
@@ -21,10 +28,15 @@ const Header = styled.div`
   background-color: #ffffff;
 `;
 
-const Logo = styled.h1`
-  margin-left: 20px;
-  font-size: 30px;
+const Brand = styled.h1`
+  margin-top: 20px;
+  font-size: 28px;
   color: #4a2882;
+`;
+
+const Logo = styled.img`
+  height: 55px;
+  margin: 12.5px;
 `;
 
 export default AppHeader;
