@@ -56,7 +56,10 @@ function RectShape({ setSelectedShapeId }) {
           const id = nanoid();
 
           const handleShapeClick = e => {
-            const offset = getMeshCenter(e.eventObject);
+            const offset = manipulateCoords(
+              [getMeshCenter(e.eventObject)],
+              base,
+            )[0];
             const manipulatedCoords = manipulateCoords(points, base);
             const rotatedCoords = rotateCoords(
               offset,

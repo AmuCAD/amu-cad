@@ -44,7 +44,10 @@ function LineShape({ setSelectedShapeId }) {
       const id = nanoid();
 
       const handleShapeClick = e => {
-        const offset = getMeshCenter(e.eventObject);
+        const offset = manipulateCoords(
+          [getMeshCenter(e.eventObject)],
+          base,
+        )[0];
         const manipulatedCoords = manipulateCoords(points, base);
         const rotatedCoords = rotateCoords(
           offset,
@@ -94,7 +97,7 @@ function LineShape({ setSelectedShapeId }) {
         onPointerMove={e => {
           setMouse(Object.values(e.point));
         }}
-        onClick={e => {
+        onClick={() => {
           setPoints([...points, mouse]);
         }}
         position={position}

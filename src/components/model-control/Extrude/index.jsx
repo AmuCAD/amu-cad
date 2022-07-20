@@ -18,10 +18,10 @@ function Extrude() {
     state.isConfirm,
     state.setIsConfirm,
   ]);
-  const isForwardDirection = useStore(state => state.isForwardDirection);
   const baseCoordinate = useStore(state => state.baseCoordinate);
-  const setActiveFunction = useStore(state => state.setActiveFunction);
   const operationType = useStore(state => state.operationType);
+  const isForwardDirection = useStore(state => state.isForwardDirection);
+  const setActiveFunction = useStore(state => state.setActiveFunction);
   const [extrudeSettings, setExtrudeSettings] = useState({});
 
   const ref = useRef(null);
