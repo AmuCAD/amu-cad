@@ -27,7 +27,7 @@ function ExtrudeModal() {
       {(activeFunction === "EXTRUDE" ||
         (activeFunction === "REVOLVE" &&
           !baseCoordinate.hasOwnProperty("y"))) &&
-          operationData && (
+        operationData && (
           <ModalContainer
             onClick={e => {
               e.stopPropagation();
@@ -36,6 +36,7 @@ function ExtrudeModal() {
             <CloseButton
               onClick={() => {
                 hideModal();
+                setExtrudeSize(0);
                 setActiveFunction(null);
               }}
             />
@@ -46,7 +47,11 @@ function ExtrudeModal() {
                 }}
                 isActive={operationType === "SUBTRACT"}
               >
-                <img src="/images/icons/subtract.png" alt="이미지 없음" width="80" />
+                <img
+                  src="/images/icons/subtract.png"
+                  alt="이미지 없음"
+                  width="80"
+                />
               </OperationSelectButton>
               <OperationSelectButton
                 onClick={() => {
@@ -54,7 +59,11 @@ function ExtrudeModal() {
                 }}
                 isActive={operationType === "UNION"}
               >
-                <img src="/images/icons/union.png" alt="이미지 없음" width="80" />
+                <img
+                  src="/images/icons/union.png"
+                  alt="이미지 없음"
+                  width="80"
+                />
               </OperationSelectButton>
             </Flex>
             <form>
@@ -68,7 +77,12 @@ function ExtrudeModal() {
                   min="0"
                   max="1000"
                   onChange={e => {
-                    setExtrudeSize(e.target.value / 10);
+                    if (e.target.value < 0 || e.target.value > 1000) {
+                      e.target.value = 0;
+                      setExtrudeSize(0);
+                    } else {
+                      setExtrudeSize(e.target.value / 10);
+                    }
                   }}
                 ></SizeInput>
                 {activeFunction === "EXTRUDE" && (
@@ -78,7 +92,11 @@ function ExtrudeModal() {
                       setIsForwardDirection();
                     }}
                   >
-                    <img src="/images/icons/direction.png" alt="이미지 없음" width="40" />
+                    <img
+                      src="/images/icons/direction.png"
+                      alt="이미지 없음"
+                      width="40"
+                    />
                   </DirectionChangeButton>
                 )}
               </Flex>
