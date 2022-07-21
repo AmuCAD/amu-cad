@@ -19,10 +19,12 @@ function EditPage() {
       <GlobalModal />
       <ControlPanel />
       <Canvas
-        style={{ width: "100%", height: "calc(100vh - 80px)" }}
+        orthographic
         camera={{
+          zoom: 50,
           position: [10, 10, 10],
         }}
+        style={{ width: "100%", height: "calc(100vh - 80px)" }}
       >
         <OrbitControls />
         <ambientLight intensity={1} />

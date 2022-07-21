@@ -73,7 +73,7 @@ function Revolve() {
               args={[
                 operationData.revolveShape,
                 {
-                  steps: 50,
+                  steps: 30,
                   bevelEnabled: false,
                   extrudePath: extrudePath,
                 },
