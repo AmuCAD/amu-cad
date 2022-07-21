@@ -1,10 +1,14 @@
 # AmuCAD
 
-**[www.amucad.co](https://www.amucad.co/)**
+![logo](https://user-images.githubusercontent.com/85783423/180281254-17e5d78c-0e8f-4b3b-a293-86241b9533b8.png)
+
+**[AmuCAD - Easy & Light 3D Design](https://www.amucad.co/)**
 
 ## 🙌 소개
 
-웹에서 누구나 간편하게 3D 디자인을 체험해 볼 수 있는 웹 어플리케이션 입니다.
+누구나 간편하게 3D 디자인을 체험해 볼 수 있는 웹 애플리케이션 입니다.
+
+https://user-images.githubusercontent.com/85783423/180281535-a4ff3500-6006-4966-9d0b-1829c5af6290.mp4
 
 ## 💡 프로젝트 동기
 
@@ -23,10 +27,10 @@
 
 ## ✨ Feature
 
-- 작업면을 선택해서 원하는 모양으로 스케치 할 수 있습니다.
+- 작업면을 선택 원하는 모양으로 스케치 할 수 있습니다.
   - 삭제 및 뒤로가기 기능을 지원합니다.
 
-https://user-images.githubusercontent.com/85783423/179580100-55c2d298-4036-4980-a155-4c2aca19ae13.mp4
+https://user-images.githubusercontent.com/85783423/180281558-4c0dbafb-9383-48ad-850e-6f480566b8ff.mp4
 
 - 작성한 스케치를 선택하여 돌출 기능을 수행할 수 있습니다.
   - 돌출 사이즈와 방향을 설정할 수 있습니다.
@@ -34,18 +38,18 @@ https://user-images.githubusercontent.com/85783423/179580100-55c2d298-4036-4980-
   * 합집합 돌출: 기존 형상에 돌출 형상을 합치는 작업
   * 차집합 돌출: 기존 형상에 돌출 형상과 겹치는 부분이 제거되는 작업
 
-https://user-images.githubusercontent.com/85783423/179580125-273dc5c0-a401-4365-9c14-bceadd92b45d.mp4
+https://user-images.githubusercontent.com/85783423/180281583-e565a874-facc-4d6c-9e06-65082fb8978c.mp4
 
 - 작성한 스케치를 선택하여 회전 돌출 기능을 수행할 수 있습니다.
   - 회전 반지름을 설정할 수 있습니다.
   - 돌출 타입을 설정할 수 있습니다.
 
-https://user-images.githubusercontent.com/85783423/179580114-5fc0123f-8c66-467f-b455-866dbe666064.mp4
+https://user-images.githubusercontent.com/85783423/180281594-f28f42e2-2a0f-414a-b3b6-ef4e45b3250a.mp4
 
 - 작업물을 저장하거나 기존 파일을 불러올 수 있습니다.
   - glTF, STL 형식을 지원합니다.
 
-https://user-images.githubusercontent.com/85783423/179580156-00f8c40c-5dca-4e9b-9c89-0af6f5f7ed3e.mp4
+https://user-images.githubusercontent.com/85783423/180281617-25568a21-1e9c-4c2b-b52c-34552c3d5940.mp4
 
 ## 🎨 Stack
 
@@ -60,6 +64,16 @@ https://user-images.githubusercontent.com/85783423/179580156-00f8c40c-5dca-4e9b-
 - Zustand
 - React Testing Library
 - react-three/test-renderer
+
+## 📁 설치 방법
+
+다운로드 후, 프로젝트 루트 디렉토리에서 다음 명령어를 입력합니다.
+
+```jsx
+npm install
+
+npm start
+```
 
 ## 🏔️ Challenge
 
