@@ -2,7 +2,7 @@
 
 ![logo](https://user-images.githubusercontent.com/85783423/180281254-17e5d78c-0e8f-4b3b-a293-86241b9533b8.png)
 
-**[AmuCAD - Easy & Light 3D Design](https://www.amucad.co/)**
+**[AmuCAD - Easy & Light 3D Design](https://amu-cad.vercel.app/)**
 
 ## 🙌 소개
 
